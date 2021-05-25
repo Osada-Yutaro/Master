@@ -76,9 +76,7 @@ def main():
 
     X, Y = load_data()
     model.fit(x=X, y={'output':Y}, epochs=10, batch_size=8)
-"""
     return model
-"""
 
 if __name__ == '__main__':
     main()
