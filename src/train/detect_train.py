@@ -59,7 +59,6 @@ def load_data():
                 X.append(dst)
                 Y.append(target)
 
-    print(len(X), len(Y))
     return np.array(X), np.array(Y)
 
 def loss_func(y_targ, y_pred, C=1.0):
@@ -97,7 +96,7 @@ def main():
     N = 1000
     for _ in range(N):
         X, Y = load_data()
-        model.fit(x=X, y={'output':Y}, epochs=8, batch_size=8)
+        model.fit(x=X, y={'output':Y}, epochs=8, batch_size=4)
     return model
 
 if __name__ == '__main__':
