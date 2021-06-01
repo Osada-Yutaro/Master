@@ -38,20 +38,19 @@ def load_data():
 
     HEIGHT, WIDTH, _ = images[0].shape
     WIN_SIZE = 96
-    N = 8
+    N = 2
 
     for frame in targets:
-        xs = np.random.randint(0, WIDTH - WIN_SIZE, N)
-        ys = np.random.randint(0, HEIGHT - WIN_SIZE, N)
-        for x in xs:
-            for y in ys:
-                for item in targets[frame].items():
-                    id, bb = item
-                    image = images[frame]
+        for i in range(N):
+            x = np.random.randint(0, WIDTH - WIN_SIZE)
+            y = np.random.randint(0, HEIGHT - WIN_SIZE)
+            for item in targets[frame].items():
+                id, bb = item
+                image = images[frame]
 
-                    dst, target = crop(image, bb, (x, y), (HEIGHT, WIDTH), WIN_SIZE)
-                    X.append(dst)
-                    Y.append(target)
+                dst, target = crop(image, bb, (x, y), (HEIGHT, WIDTH), WIN_SIZE)
+                X.append(dst)
+                Y.append(target)
 
     return np.array(X), np.array(Y)
 
