@@ -63,8 +63,9 @@ def load_data():
     return np.array(X), np.array(Y)
 
 def loss_func(y_targ, y_pred, C=1.0):
-    conf_target = y_targ[4]
-    conf_predic = y_pred[4]
+    print(y_targ.shape)
+    conf_target = y_targ[:, 4]
+    conf_predic = y_pred[:, 4]
 
     loss = K.square(y_targ - y_pred)*conf_target + C*K.square(conf_target - conf_predic)
     return loss
