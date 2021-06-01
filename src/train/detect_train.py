@@ -96,7 +96,7 @@ def main():
     model = detect_model()
 
     N = 100
-    for _ in range(1):
+    for _ in range(N):
         X, Y = load_data()
         model.fit(x=X, y={'output':Y}, epochs=8, batch_size=4)
     return model
