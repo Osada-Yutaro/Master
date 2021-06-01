@@ -44,9 +44,9 @@ def load_data():
         for i in range(M):
             x = np.random.randint(0, WIDTH - WIN_SIZE)
             y = np.random.randint(0, HEIGHT - WIN_SIZE)
-            dst = None
-            target = None
             image = images[frame]
+            dst = image[y:y + WIN_SIZE, x:x + WIN_SIZE]
+            target = None
             for item in targets[frame].items():
                 id, bb = item
 
@@ -55,6 +55,7 @@ def load_data():
                     X.append(dst)
                     Y.append(target)
                     break
+            assert(not target is None)
             if target == [0, 0, 0, 0, 0]:
                 X.append(dst)
                 Y.append(target)
