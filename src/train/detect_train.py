@@ -38,20 +38,28 @@ def load_data():
 
     HEIGHT, WIDTH, _ = images[0].shape
     WIN_SIZE = 96
-    N = 2
+    M = 1
 
     for frame in targets:
-        for i in range(N):
+        for i in range(M):
             x = np.random.randint(0, WIDTH - WIN_SIZE)
             y = np.random.randint(0, HEIGHT - WIN_SIZE)
+            dst = None
+            target = None
+            image = images[frame]
             for item in targets[frame].items():
                 id, bb = item
-                image = images[frame]
 
                 dst, target = crop(image, bb, (x, y), (HEIGHT, WIDTH), WIN_SIZE)
+                if not target == [0, 0, 0, 0, 0]:
+                    X.append(dst)
+                    Y.append(target)
+                    break
+            if target == [0, 0, 0, 0, 0]:
                 X.append(dst)
                 Y.append(target)
 
+    print(len(X), len(Y))
     return np.array(X), np.array(Y)
 
 def loss_func(y_targ, y_pred, C=1.0):
