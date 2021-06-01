@@ -34,8 +34,11 @@ data[フレーム番号][物体id] = (h, w, x, y) の辞書を返す
 """
 def load_targets():
     import xml.etree.ElementTree as ET
+    import os
+    PETS09 = os.environ['PETS09']
+
+    xmlfile = os.path.join(PETS09, 'PETS2009-S1L1-1.xml')
     
-    xmlfile = 'PETS2009-S1L1-1.xml'
     tree = ET.parse(xmlfile)
     root = tree.getroot()
 
