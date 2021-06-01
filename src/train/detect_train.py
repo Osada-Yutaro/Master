@@ -40,13 +40,13 @@ def load_data():
     WIN_SIZE = 96
 
     for frame in targets:
-        xs = np.random.randint(0, WIDTH - WIN_SIZE, 8)
-        ys = np.random.randint(0, HEIGHT - WIN_SIZE, 8)
+        xs = np.random.randint(0, WIDTH - WIN_SIZE, 1)
+        ys = np.random.randint(0, HEIGHT - WIN_SIZE, 1)
         for x in xs:
             for y in ys:
                 for item in targets[frame].items():
                     id, bb = item
-                    image = images[frame][y:y + WIN_SIZE, x:x + WIN_SIZE]
+                    image = images[frame]
 
                     dst, target = crop(image, bb, (x, y), (HEIGHT, WIDTH), WIN_SIZE)
                     X.append(dst)
