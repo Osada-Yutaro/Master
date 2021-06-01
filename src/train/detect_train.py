@@ -38,10 +38,11 @@ def load_data():
 
     HEIGHT, WIDTH, _ = images[0].shape
     WIN_SIZE = 96
+    N = 8
 
     for frame in targets:
-        xs = np.random.randint(0, WIDTH - WIN_SIZE, 1)
-        ys = np.random.randint(0, HEIGHT - WIN_SIZE, 1)
+        xs = np.random.randint(0, WIDTH - WIN_SIZE, N)
+        ys = np.random.randint(0, HEIGHT - WIN_SIZE, N)
         for x in xs:
             for y in ys:
                 for item in targets[frame].items():
@@ -86,8 +87,10 @@ def detect_model():
 def main():
     model = detect_model()
 
-    X, Y = load_data()
-    model.fit(x=X, y={'output':Y}, epochs=10, batch_size=8)
+    N = 1000
+    for _ in range(N):
+        X, Y = load_data()
+        model.fit(x=X, y={'output':Y}, epochs=8, batch_size=8)
     return model
 
 if __name__ == '__main__':
