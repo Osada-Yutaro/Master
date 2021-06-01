@@ -15,6 +15,20 @@ def get_layer(model, name):
             return layer
     return None
 
+def crop(image, bb, position, image_size, win_size):
+    height, width = image_size
+    x, y = position
+    newbb = boundingbox_in_window(image_size, (win_size, win_size), position, bb)
+    dst = image[y:y + win_size, x:x + win_size]
+    X = image_in_frame((win_size, win_size), dst)
+    Y = None
+    if newbb is None:
+        Y = [0, 0, 0, 0, 0]
+    else:
+        h_targ, w_targ, x_targ, y_targ = newbb
+        Y = [h_targ, w_targ, x_targ, y_targ, 1]
+    return X, Y
+
 def load_data():
     X = []
     Y = []
@@ -26,20 +40,18 @@ def load_data():
     WIN_SIZE = 96
 
     for frame in targets:
-        for x in range(0, WIDTH, WIN_SIZE//3):
-            for y in range(0, HEIGHT, WIN_SIZE//3):
+        xs = np.random.randint(0, WIDTH - WIN_SIZE, 8)
+        ys = np.random.randint(0, HEIGHT - WIN_SIZE, 8)
+        for x in xs:
+            for y in ys:
                 for item in targets[frame].items():
                     id, bb = item
-                    newbb = boundingbox_in_window((HEIGHT, WIDTH), (WIN_SIZE, WIN_SIZE), (x, y), bb)
                     image = images[frame][y:y + WIN_SIZE, x:x + WIN_SIZE]
-                    cropped = image_in_frame((WIN_SIZE, WIN_SIZE), image)
-                    X.append(cropped)
-                    if newbb is None:
-                        Y.append([0., 0., 0., 0., 0.])
-                    else:
-                        h_targ, w_targ, x_targ, y_targ = newbb
-                        target = [h_targ, w_targ, x_targ, y_targ, 1]
-                        Y.append(target)
+
+                    dst, target = crop(image, bb, (x, y), (HEIGHT, WIDTH), WIN_SIZE)
+                    X.append(dst)
+                    Y.append(target)
+
     return np.array(X), np.array(Y)
 
 def loss_func(y_targ, y_pred, C=1.0):
