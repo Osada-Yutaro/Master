@@ -117,7 +117,7 @@ def detect_model():
     x = Dense(5, name='output')(x)
 
     model = Model(inputs=vgg16.input, outputs=[x, hidden_1, hidden_2, hidden_3])
-    sgd = SGD(learning_rate=1e-4, momentum=0.9)
+    sgd = SGD(learning_rate=1e-3, momentum=0.9)
     model.compile(loss=loss_func, optimizer=sgd, metrics=iou())
     #model.compile(loss='mean_squared_error', optimizer=sgd)
 
