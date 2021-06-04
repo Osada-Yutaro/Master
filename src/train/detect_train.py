@@ -84,10 +84,10 @@ def iou(groundtruth, predict):
     c_predic = K.cast(K.greater(predict[:, 4], 0.5), K.floatx())
 
     def k_max(a, b):
-        cond = K.cast(K.greater(a, b))
+        cond = K.cast(K.greater(a, b), K.floatx())
         return cond*a + (1 - cond)*b
     def k_min(a, b):
-        cond = K.cast(K.less(a, b))
+        cond = K.cast(K.less(a, b), K.floatx())
         return cond*a + (1 - cond)*b
 
     dx = k_min(x_ground + w_ground, x_predic + w_predic) - k_max(x_ground, x_predic)
