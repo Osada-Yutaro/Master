@@ -117,17 +117,17 @@ def detect_model():
     x = Dense(5, name='output')(x)
 
     model = Model(inputs=vgg16.input, outputs=[x, hidden_1, hidden_2, hidden_3])
-    sgd = SGD(learning_rate=1e-3, momentum=0.9)
+    sgd = SGD(learning_rate=1e-4, momentum=0.9)
     model.compile(loss=loss_func, optimizer=sgd, metrics=[iou])
     return model
 
 def main():
     model = detect_model()
 
-    N = 100
+    N = 10000
     for _ in range(N):
         X, Y = load_data()
-        model.fit(x=X, y={'output':Y}, epochs=8, batch_size=4)
+        model.fit(x=X, y={'output':Y}, epochs=1, batch_size=4)
     return model
 
 if __name__ == '__main__':
