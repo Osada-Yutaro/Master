@@ -75,13 +75,13 @@ def iou(groundtruth, predict):
     w_ground = groundtruth[:, 1]
     x_ground = groundtruth[:, 2]
     y_ground = groundtruth[:, 3]
-    c_ground = groundtruth[:, 4]
+    c_ground = K.cast(K.greater(groundtruth[:, 4], 0.5), K.floatx())
 
     h_predic = predict[:, 0]
     w_predic = predict[:, 1]
     x_predic = predict[:, 2]
     y_predic = predict[:, 3]
-    c_predic = predict[:, 4]
+    c_predic = K.cast(K.greater(predict[:, 4], 0.5), K.floatx())
 
     def k_max(a, b):
         cond = K.cast(K.greater(a, b))
@@ -93,9 +93,9 @@ def iou(groundtruth, predict):
     dx = k_min(x_ground + w_ground, x_predic + w_predic) - k_max(x_ground, x_predic)
     dy = k_min(y_ground + h_ground, y_predic + h_predic) - k_max(y_ground, y_predic)
 
-    true_positive = K.cast(K.greater(dx, 0))*K.cast(K.greater(dy, 0))
-    true = h_ground*w_ground
-    positive = h_predic*w_predic
+    true_positive = K.cast(K.greater(dx, 0))*K.cast(K.greater(dy, 0))*c_ground*c_predic
+    true = h_ground*w_ground*c_ground
+    positive = h_predic*w_predic*c_predic
     
     return K.sum(true_positive)/(K.sum(true + positive) + K.epsilon())
 
@@ -116,7 +116,7 @@ def detect_model():
 
     model = Model(inputs=vgg16.input, outputs=[x, hidden_1, hidden_2, hidden_3])
     sgd = SGD(learning_rate=1e-3, momentum=0.9)
-    model.compile(loss=loss_func, optimizer=sgd, metrics=['iou', iou])
+    model.compile(loss=loss_func, optimizer=sgd, metrics=[iou])
     return model
 
 def main():
