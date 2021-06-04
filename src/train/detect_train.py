@@ -1,7 +1,7 @@
 from tensorflow.keras import applications
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Dense, Input, Flatten
-from tensorflow.keras.optimizers import SGD
+from tensorflow.keras.optimizers import SGD, Adam
 import numpy as np
 from preprocess import load_images, load_targets, boundingbox_in_window, image_in_frame
 from tensorflow.keras import backend as K
@@ -38,7 +38,7 @@ def load_data():
 
     HEIGHT, WIDTH, _ = images[0].shape
     WIN_SIZE = 96
-    M = 1
+    M = 4
 
     for frame in targets:
         for i in range(M):
@@ -114,10 +114,12 @@ def detect_model():
     x = vgg16.output
     x = Flatten()(x)
     x = Dense(1024, activation='relu')(x)
+    x = Dense(1024, activation='relu')(x)
     x = Dense(5, name='output')(x)
 
     model = Model(inputs=vgg16.input, outputs=[x, hidden_1, hidden_2, hidden_3])
     sgd = SGD(learning_rate=1e-4, momentum=0.9)
+    adam = Adam(learning_rate=1e-4, beta_1=0.9, beta_2=0.999)
     model.compile(loss=loss_func, optimizer=sgd, metrics=[iou])
     return model
 
