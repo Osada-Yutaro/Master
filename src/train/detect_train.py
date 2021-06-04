@@ -71,17 +71,19 @@ def loss_func(y_targ, y_pred, C=1.0):
     return loss
 
 def iou(groundtruth, predict):
-    h_ground = groundtruth[:, 0]
-    w_ground = groundtruth[:, 1]
-    x_ground = groundtruth[:, 2]
-    y_ground = groundtruth[:, 3]
-    c_ground = K.cast(K.greater(groundtruth[:, 4], 0.5), K.floatx())
+    def clip(x, boarder=0):
+        return K.cast(K.greater(x, boarder), K.floatx())
+    h_ground = clip(groundtruth[:, 0])
+    w_ground = clip(groundtruth[:, 1])
+    x_ground = clip(groundtruth[:, 2])
+    y_ground = clip(groundtruth[:, 3])
+    c_ground = clip(groundtruth[:, 4], 0.5)
 
-    h_predic = predict[:, 0]
-    w_predic = predict[:, 1]
-    x_predic = predict[:, 2]
-    y_predic = predict[:, 3]
-    c_predic = K.cast(K.greater(predict[:, 4], 0.5), K.floatx())
+    h_predic = clip(predict[:, 0])
+    w_predic = clip(predict[:, 1])
+    x_predic = clip(predict[:, 2])
+    y_predic = clip(predict[:, 3])
+    c_predic = clip(predict[:, 4], 0.5)
 
     def k_max(a, b):
         cond = K.cast(K.greater(a, b), K.floatx())
