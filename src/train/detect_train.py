@@ -83,23 +83,21 @@ def iou(groundtruth, predict):
     y_predic = predict[:, 3]
     c_predic = predict[:, 4]
 
-    w1 = x_ground + w_ground - x_predic
-    w2 = x_predic + w_predic - x_ground
+    def k_max(a, b):
+        cond = K.cast(K.greater(a, b))
+        return cond*a + (1 - cond)*b
+    def k_min(a, b):
+        cond = K.cast(K.less(a, b))
+        return cond*a + (1 - cond)*b
 
-    h1 = y_ground + h_ground - y_predic
-    h2 = y_predic + h_predic - y_ground
+    dx = k_min(x_ground + w_ground, x_predic + w_predic) - k_max(x_ground, x_predic)
+    dy = k_min(y_ground + h_ground, y_predic + h_predic) - k_max(y_ground, y_predic)
 
-    def rect(w, h):
-        isrect = K.cast(K.greater(w, 0), K.floatx())*K.cast(K.greater(h, 0), K.floatx())
-        return K.cast(isrect, K.floatx())*w*h
+    true_positive = K.cast(K.greater(dx, 0))*K.cast(K.greater(dy, 0))
+    true = h_ground*w_ground
+    positive = h_predic*w_predic
     
-    rect_area = rect(w1, h1) + rect(w1, h2) + rect(w2, h1) + rect(w2, h2)
-
-    true_positive = K.sum(rect_area*c_ground*c_predic)
-    positive = K.sum(h_predic*w_predic*c_predic)
-    true = K.sum(h_ground*w_ground*c_ground)
-
-    return true_positive/(positive + true - true_positive + K.epsilon())
+    return K.sum(true_positive)/(K.sum(true + positive) + K.epsilon())
 
 def detect_model():
     vgg16 = applications.vgg16.VGG16(weights='imagenet', include_top=False, input_tensor=Input(shape=(96, 96, 3)))
