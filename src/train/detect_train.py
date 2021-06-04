@@ -67,8 +67,39 @@ def loss_func(y_targ, y_pred, C=1.0):
     conf_predic = y_pred[:, 4]
 
 
-    loss = K.sum(K.square(y_targ - y_pred))*conf_target + C*K.square(conf_target - conf_predic)
+    loss = K.sum(K.square(y_targ - y_pred), axis=1)*conf_target + C*K.square(conf_target - conf_predic)
     return loss
+
+def iou(groundtruth, predict):
+    h_ground = groundtruth[:, 0]
+    w_ground = groundtruth[:, 1]
+    x_ground = groundtruth[:, 2]
+    y_ground = groundtruth[:, 3]
+    c_ground = groundtruth[:, 4]
+
+    h_predic = predict[:, 0]
+    w_predic = predict[:, 1]
+    x_predic = predict[:, 2]
+    y_predic = predict[:, 3]
+    c_predic = predict[:, 4]
+
+    w1 = x_ground + w_ground - x_predic
+    w2 = x_predic + w_predic - x_ground
+
+    h1 = y_ground + h_ground - y_predic
+    h2 = y_predic + h_predic - y_ground
+
+    def rect(w, h):
+        isrect = K.greater(w, 0)*K.greater(h, 0)
+        return K.cast(isrect, K.floatx())*w*h
+    
+    rect_area = rect(w1, h1) + rect(w1, h2) + rect(w2, h1) + rect(w2, h2)
+
+    true_positive = K.sum(rect_area*c_ground*c_predic)
+    positive = K.sum(h_predic*w_predic*c_predic)
+    true = K.sum(h_ground*w_ground*c_ground)
+
+    return true_positive/(positive + true - true_positive + K.epsilon())
 
 def detect_model():
     vgg16 = applications.vgg16.VGG16(weights='imagenet', include_top=False, input_tensor=Input(shape=(96, 96, 3)))
