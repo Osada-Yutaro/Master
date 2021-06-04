@@ -90,7 +90,7 @@ def iou(groundtruth, predict):
     h2 = y_predic + h_predic - y_ground
 
     def rect(w, h):
-        isrect = K.greater(w, 0)*K.greater(h, 0)
+        isrect = K.cast(K.greater(w, 0), K.floatx())*K.cast(K.greater(h, 0), K.floatx())
         return K.cast(isrect, K.floatx())*w*h
     
     rect_area = rect(w1, h1) + rect(w1, h2) + rect(w2, h1) + rect(w2, h2)
