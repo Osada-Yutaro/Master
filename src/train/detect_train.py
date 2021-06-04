@@ -93,7 +93,7 @@ def iou(groundtruth, predict):
     dx = k_min(x_ground + w_ground, x_predic + w_predic) - k_max(x_ground, x_predic)
     dy = k_min(y_ground + h_ground, y_predic + h_predic) - k_max(y_ground, y_predic)
 
-    true_positive = K.cast(K.greater(dx, 0))*K.cast(K.greater(dy, 0))*c_ground*c_predic
+    true_positive = K.cast(K.greater(dx, 0), K.floatx())*K.cast(K.greater(dy, 0), K.floatx())*c_ground*c_predic
     true = h_ground*w_ground*c_ground
     positive = h_predic*w_predic*c_predic
     
