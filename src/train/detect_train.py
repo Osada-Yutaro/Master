@@ -29,6 +29,10 @@ def crop(image, bb, position, image_size, win_size):
         Y = [h_targ, w_targ, x_targ, y_targ, 1]
     return X, Y
 
+def key(bb):
+    h, w, _, _, c = bb
+    return h*w*c
+
 def load_data():
     X = []
     Y = []
@@ -46,19 +50,15 @@ def load_data():
             y = np.random.randint(0, HEIGHT - WIN_SIZE)
             image = images[frame]
             dst = image[y:y + WIN_SIZE, x:x + WIN_SIZE]
-            target = None
+            bbs = [[0, 0, 0, 0, 0]]
             for item in targets[frame].items():
                 id, bb = item
 
-                dst, target = crop(image, bb, (x, y), (HEIGHT, WIDTH), WIN_SIZE)
-                if not target == [0, 0, 0, 0, 0]:
-                    X.append(dst)
-                    Y.append(target)
-                    break
-            assert(not target is None)
-            if target == [0, 0, 0, 0, 0]:
-                X.append(dst)
-                Y.append(target)
+                _, newbb = crop(image, bb, (x, y), (HEIGHT, WIDTH), WIN_SIZE)
+                bbs.append(newbb)
+            target = max(bbs, key=key)
+            X.append(dst)
+            Y.append(target)
 
     return np.array(X), np.array(Y)
 
@@ -66,8 +66,7 @@ def loss_func(y_targ, y_pred, C=1.0):
     conf_target = y_targ[:, 4]
     conf_predic = y_pred[:, 4]
 
-
-    loss = K.sum(K.square(y_targ - y_pred), axis=1)*conf_target + C*K.square(conf_target - conf_predic)
+    loss = K.sum(K.square(y_targ - y_pred), axis=1)*conf_target + C*(1 - conf_target)*K.square(conf_target - conf_predic)
     return loss
 
 def iou(groundtruth, predict):

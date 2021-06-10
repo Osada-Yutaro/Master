@@ -16,8 +16,8 @@ def boundingbox_in_window(image_size, win_size, win_pos, bb):
     import numpy as np
 
     height_w, width_w = win_size
-    y_w, x_w = win_pos
-    height_b, width_b, x_b, y_b = tuple(map(int, bb))
+    x_w, y_w = win_pos
+    height_b, width_b, x_b, y_b = tuple(bb)
 
     if not intersect((height_w, width_w, x_w, y_w), bb):
         return None
@@ -50,7 +50,8 @@ def load_targets():
             for obj in objectlist:
                 obj_id = int(obj.attrib['id'])
                 for box in obj:
-                    h, w, x, y = map(float, box.attrib.values())
+                    h, w, xc, yc = map(float, box.attrib.values())
+                    x, y = xc - w/2, yc - h/2
 
                     data[number][obj_id] = (h, w, x, y)
     return data
