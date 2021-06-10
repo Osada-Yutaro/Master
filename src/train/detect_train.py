@@ -118,7 +118,7 @@ def detect_model():
 
     model = Model(inputs=vgg16.input, outputs=[x, hidden_1, hidden_2, hidden_3])
     sgd = SGD(learning_rate=1e-4, momentum=0.9)
-    adam = Adam(learning_rate=1e-2, beta_1=0.9, beta_2=0.999)
+    adam = Adam(learning_rate=1e-4, beta_1=0.9, beta_2=0.999)
     model.compile(loss=loss_func, optimizer=adam, metrics=[iou])
     return model
 
