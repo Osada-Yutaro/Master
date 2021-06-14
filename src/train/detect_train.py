@@ -1,6 +1,6 @@
 from tensorflow.keras import applications
 from tensorflow.keras.models import Model
-from tensorflow.keras.layers import Dense, Input, Flatten
+from tensorflow.keras.layers import Dense, Input, Flatten, BatchNormalization
 from tensorflow.keras.optimizers import SGD, Adam
 import numpy as np
 from preprocess import load_images, load_targets, boundingbox_in_window, image_in_frame
@@ -44,7 +44,7 @@ def load_data():
     WIN_SIZE = 96
     M = 4
 
-    for frame in range(40):
+    for frame in targets:
         for i in range(M):
             x = np.random.randint(0, WIDTH - WIN_SIZE)
             y = np.random.randint(0, HEIGHT - WIN_SIZE)
@@ -113,7 +113,9 @@ def detect_model():
     x = vgg16.output
     x = Flatten()(x)
     x = Dense(1024, activation='relu')(x)
+    x = BatchNormalization()(x)
     x = Dense(1024, activation='relu')(x)
+    x = BatchNormalization()(x)
     x = Dense(5, name='output')(x)
 
     model = Model(inputs=vgg16.input, outputs=[x, hidden_1, hidden_2, hidden_3])
