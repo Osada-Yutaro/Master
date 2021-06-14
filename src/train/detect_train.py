@@ -44,7 +44,7 @@ def load_data():
     WIN_SIZE = 96
     M = 4
 
-    for frame in targets:
+    for frame in range(40):
         for i in range(M):
             x = np.random.randint(0, WIDTH - WIN_SIZE)
             y = np.random.randint(0, HEIGHT - WIN_SIZE)
