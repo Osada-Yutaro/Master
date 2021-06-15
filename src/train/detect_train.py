@@ -1,3 +1,4 @@
+import os
 from tensorflow.keras import applications
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Dense, Input, Flatten, BatchNormalization
@@ -5,6 +6,7 @@ from tensorflow.keras.optimizers import SGD, Adam
 import numpy as np
 from preprocess import load_images, load_targets, boundingbox_in_window, image_in_frame
 from tensorflow.keras import backend as K
+import cv2
 
 """
     modelの名前が一致する層を返す
@@ -44,10 +46,15 @@ def load_data():
     WIN_SIZE = 96
     M = 4
 
-    for frame in targets:
-        for i in range(40):
+    for frame in range(40):
+        background_dir = os.environ['Background']
+        filename = os.path.join(background, str(frame) + '.png')
+        background = cv2.imread(filename)/255
+        for i in range(M):
             x = np.random.randint(0, WIDTH - WIN_SIZE)
             y = np.random.randint(0, HEIGHT - WIN_SIZE)
+            for _x in range(x, WIDTH - WIN_SIZE, 8):
+                for _y in range(y, HEIGHT - WIN_SIZE, 8):
             image = images[frame]
             dst = image[y:y + WIN_SIZE, x:x + WIN_SIZE]
             bbs = [[0, 0, 0, 0, 0]]
