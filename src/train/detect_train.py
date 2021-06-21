@@ -47,7 +47,7 @@ def load_data():
     M = 4
 
     for frame in range(40):
-        background_dir = os.environ['Background']
+        background_dir = '/kw_resources/Crowd_PETS09/Background'
         filename = os.path.join(background_dir, str(frame) + '.png')
         mask = cv2.imread(filename)/255
         for i in range(M):
