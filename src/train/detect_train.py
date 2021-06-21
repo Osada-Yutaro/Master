@@ -48,24 +48,25 @@ def load_data():
 
     for frame in range(40):
         background_dir = os.environ['Background']
-        filename = os.path.join(background, str(frame) + '.png')
-        background = cv2.imread(filename)/255
+        filename = os.path.join(background_dir, str(frame) + '.png')
+        mask = cv2.imread(filename)/255
         for i in range(M):
             x = np.random.randint(0, WIDTH - WIN_SIZE)
             y = np.random.randint(0, HEIGHT - WIN_SIZE)
             for _x in range(x, WIDTH - WIN_SIZE, 8):
                 for _y in range(y, HEIGHT - WIN_SIZE, 8):
-            image = images[frame]
-            dst = image[y:y + WIN_SIZE, x:x + WIN_SIZE]
-            bbs = [[0, 0, 0, 0, 0]]
-            for item in targets[frame].items():
-                id, bb = item
+                    judge = 0.3 < np.mean(mask[_y:_y + WIN_SIZE, _x:_x + WIN_SIZE])
+                    image = images[frame]
+                    dst = image[_y:_y + WIN_SIZE, _x:_x + WIN_SIZE]
+                    bbs = [[0, 0, 0, 0, 0]]
+                    for item in targets[frame].items():
+                        id, bb = item
 
-                _, newbb = crop(image, bb, (x, y), (HEIGHT, WIDTH), WIN_SIZE)
-                bbs.append(newbb)
-            target = max(bbs, key=key)
-            X.append(dst)
-            Y.append(target)
+                        _, newbb = crop(image, bb, (_x, _y), (HEIGHT, WIDTH), WIN_SIZE)
+                        bbs.append(newbb)
+                    target = max(bbs, key=key)
+                    X.append(dst)
+                    Y.append(target)
 
     return np.array(X), np.array(Y)
 
@@ -137,7 +138,10 @@ def main():
     N = 10000
     for _ in range(N):
         X, Y = load_data()
-        model.fit(x=X, y={'output':Y}, epochs=1, batch_size=4)
+        history = model.fit(x=X, y={'output':Y}, epochs=1, batch_size=4)
+        loss = history.history['loss'][0]
+        iou = history.history['output_iou']
+        print(loss, iou)
     return model
 
 if __name__ == '__main__':
