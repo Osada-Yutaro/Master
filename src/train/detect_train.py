@@ -150,7 +150,7 @@ def main():
     N = 10000
     for _ in range(N):
         X, Y = load_data()
-        history = model.fit(x=X, y={'output':Y}, epochs=1, batch_size=4)
+        history = model.fit(x=X, y={'output':Y}, epochs=1, batch_size=4, verbose=0)
         loss = history.history['loss'][0]
         iou = history.history['iou']
         print(loss, iou)
