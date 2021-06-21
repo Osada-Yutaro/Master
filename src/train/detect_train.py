@@ -133,9 +133,6 @@ def detect_model():
     return model
 
 def main():
-    print(os.listdir('/kw_resources'))
-    print(os.listdir(os.environ['PETS09']))
-    print('hello')
     model = detect_model()
 
     N = 10000
