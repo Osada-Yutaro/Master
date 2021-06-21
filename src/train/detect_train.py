@@ -149,13 +149,13 @@ def main():
 
 
     N = 10000
-    for _ in range(N):
+    for i in range(N):
         X, Y = load_data()
         history = model.fit(x=X, y={'output':Y}, epochs=1, batch_size=4, verbose=0)
         loss = history.history['loss'][0]
         iou = history.history['iou'][0]
         with open('/kw_resources/training_log.txt', mode='a') as f:
-            message = str(loss) + ' ' + str(iou)
+            message = str(i) + ' ' + str(loss) + ' ' + str(iou)
             f.write(message)
         print(loss, iou)
     return model
