@@ -154,10 +154,9 @@ def main():
     for _ in range(N):
         X, Y = load_data()
         history = model.fit(x=X, y={'output':Y}, epochs=1, batch_size=4)
-        print(history)
-        #loss = history.history['loss'][0]
-        #iou = history.history['output_iou']
-        #print(loss, iou)
+        loss = history.history['loss'][0]
+        iou = history.history['iou']
+        print(loss, iou)
     return model
 
 if __name__ == '__main__':
