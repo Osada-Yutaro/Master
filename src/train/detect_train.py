@@ -47,12 +47,24 @@ def load_data():
     M = 4
 
     for frame in range(40):
-        background_dir = '/kw_resources/Crowd_PETS09/Background'
-        filename = os.path.join(background_dir, str(frame) + '.png')
-        mask = cv2.imread(filename)/255
+        #background_dir = '/kw_resources/Crowd_PETS09/Background'
+        #filename = os.path.join(background_dir, str(frame) + '.png')
+        #mask = cv2.imread(filename)/255
         for i in range(M):
             x = np.random.randint(0, WIDTH - WIN_SIZE)
             y = np.random.randint(0, HEIGHT - WIN_SIZE)
+            image = images[frame]
+            dst = image[y:y + WIN_SIZE, x:x + WIN_SIZE]
+            bbs = [[0, 0, 0, 0, 0]]
+            for item in targets[frame].items():
+                id, bb = item
+
+                _, newbb = crop(image, bb, (x, y), (HEIGHT, WIDTH), WIN_SIZE)
+                bbs.append(newbb)
+            target = max(bbs, key=key)
+            X.append(dst)
+            Y.append(target)
+        """
             for _x in range(x, WIDTH - WIN_SIZE, 8):
                 for _y in range(y, HEIGHT - WIN_SIZE, 8):
                     judge = 0.3 < np.mean(mask[_y:_y + WIN_SIZE, _x:_x + WIN_SIZE])
@@ -67,7 +79,7 @@ def load_data():
                     target = max(bbs, key=key)
                     X.append(dst)
                     Y.append(target)
-
+        """
     return np.array(X), np.array(Y)
 
 def loss_func(y_targ, y_pred, C=1.0):
