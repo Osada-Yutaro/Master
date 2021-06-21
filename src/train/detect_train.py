@@ -147,12 +147,15 @@ def detect_model():
 def main():
     model = detect_model()
 
+
     N = 10000
     for _ in range(N):
         X, Y = load_data()
         history = model.fit(x=X, y={'output':Y}, epochs=1, batch_size=4, verbose=0)
         loss = history.history['loss'][0]
-        iou = history.history['iou']
+        iou = history.history['iou'][0]
+        with open('/kw_resources/training_log.txt', mode='a') as f:
+            f.write(loss, iou)
         print(loss, iou)
     return model
 
