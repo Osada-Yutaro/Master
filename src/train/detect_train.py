@@ -133,7 +133,7 @@ def detect_model():
     return model
 
 def main():
-    print(os.listdir(os.path.join('kw_resources', 'Crowd_PETS09')))
+    print(os.listdir(os.path.join('/kw_resources', 'Crowd_PETS09')))
 
     model = detect_model()
 
