@@ -133,6 +133,7 @@ def detect_model():
     return model
 
 def main():
+    print('hello')
     model = detect_model()
 
     N = 10000
