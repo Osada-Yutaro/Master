@@ -60,7 +60,7 @@ def load_images():
     import os
     import cv2
     import numpy as np
-    PETS09 = os.environ['PETS09']
+    PETS09 = os.path.join('/kw_resources', 'Crowd_PETS09')
     S1 = 'S1'
     L1 = 'L1'
     Time_13_57 = 'Time_13-57'
