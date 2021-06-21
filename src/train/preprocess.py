@@ -36,6 +36,8 @@ def load_targets():
     import xml.etree.ElementTree as ET
     import os
     PETS09 = os.environ['PETS09']
+    print(os.listdir('/mnt/cloud'))
+    print(os.listdir(PETS09))
 
     xmlfile = os.path.join(PETS09, 'PETS2009-S1L1-1.xml')
     
