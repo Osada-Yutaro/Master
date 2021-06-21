@@ -155,7 +155,8 @@ def main():
         loss = history.history['loss'][0]
         iou = history.history['iou'][0]
         with open('/kw_resources/training_log.txt', mode='a') as f:
-            f.write(loss, iou)
+            message = str(loss) + ' ' + str(iou)
+            f.write(message)
         print(loss, iou)
     return model
 
