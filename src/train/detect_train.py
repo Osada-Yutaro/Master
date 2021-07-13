@@ -35,51 +35,29 @@ def key(bb):
     h, w, _, _, c = bb
     return h*w*c
 
-def load_data():
+def load_data(num):
     X = []
     Y = []
 
-    images = load_images()
-    targets = load_targets()
+    image = load_images()[num]
+    targets = load_targets()[num]
 
-    HEIGHT, WIDTH, _ = images[0].shape
+    HEIGHT, WIDTH, _ = image[0].shape
     WIN_SIZE = 96
     M = 4
 
-    for frame in range(40):
-        #background_dir = '/kw_resources/Crowd_PETS09/Background'
-        #filename = os.path.join(background_dir, str(frame) + '.png')
-        #mask = cv2.imread(filename)/255
-        for i in range(M):
-            x = np.random.randint(0, WIDTH - WIN_SIZE)
-            y = np.random.randint(0, HEIGHT - WIN_SIZE)
-            image = images[frame]
-            dst = image[y:y + WIN_SIZE, x:x + WIN_SIZE]
-            bbs = [[0, 0, 0, 0, 0]]
-            for item in targets[frame].items():
+    x0 = np.random.randint(0, WIN_SIZE)
+    y0 = np.random.randint(0, WIN_SIZE)
+    for x in range(x0, WIDTH - WIN_SIZE, WIN_SIZE//3):
+        for y in range(y0, HEIGHT - WIN_SIZE, WIN_SIZE//3):
+            crop = image[y:y + WIN_SIZE, x:x + WIN_SIZE]
+            targ = [0, 0, 0, 0, 0]
+            for item in targets.items():
                 id, bb = item
-
                 _, newbb = crop(image, bb, (x, y), (HEIGHT, WIDTH), WIN_SIZE)
-                bbs.append(newbb)
-            target = max(bbs, key=key)
-            X.append(dst)
-            Y.append(target)
-        """
-            for _x in range(x, WIDTH - WIN_SIZE, 8):
-                for _y in range(y, HEIGHT - WIN_SIZE, 8):
-                    judge = 0.3 < np.mean(mask[_y:_y + WIN_SIZE, _x:_x + WIN_SIZE])
-                    image = images[frame]
-                    dst = image[_y:_y + WIN_SIZE, _x:_x + WIN_SIZE]
-                    bbs = [[0, 0, 0, 0, 0]]
-                    for item in targets[frame].items():
-                        id, bb = item
-
-                        _, newbb = crop(image, bb, (_x, _y), (HEIGHT, WIDTH), WIN_SIZE)
-                        bbs.append(newbb)
-                    target = max(bbs, key=key)
-                    X.append(dst)
-                    Y.append(target)
-        """
+                targ = max(targ, newbb, key=key)
+            X.append(crop)
+            Y.append(targ)
     return np.array(X), np.array(Y)
 
 def loss_func(y_targ, y_pred, C=1.0):
@@ -149,8 +127,8 @@ def main():
 
 
     N = 10000
-    for i in range(N):
-        X, Y = load_data()
+    for i in range(180):
+        X, Y = load_data(i)
         history = model.fit(x=X, y={'output':Y}, epochs=1, batch_size=4, verbose=0)
         loss = history.history['loss'][0]
         iou = history.history['iou'][0]
