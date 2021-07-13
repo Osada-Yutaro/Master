@@ -42,7 +42,7 @@ def load_data(num):
     image = load_images()[num]
     targets = load_targets()[num]
 
-    HEIGHT, WIDTH, _ = image[0].shape
+    HEIGHT, WIDTH, _ = image.shape
     WIN_SIZE = 96
     M = 4
 
