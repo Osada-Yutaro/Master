@@ -124,18 +124,20 @@ def detect_model():
 def main():
     model = detect_model()
 
-
+    M = 180
     N = 10000
     for epoch in range(N):
-        for i in range(180):
+        loss = 0
+        iou = 0
+        for i in range(M):
             X, Y = load_data(i)
             history = model.fit(x=X, y={'output':Y}, epochs=1, batch_size=4, verbose=0)
-            loss = history.history['loss'][0]
-            iou = history.history['iou'][0]
+            loss += history.history['loss'][0]
+            iou += history.history['iou'][0]
             with open('/kw_resources/training_log.txt', mode='a') as f:
                 message = str(i) + ' ' + str(loss) + ' ' + str(iou)
                 f.write(message)
-            print(epoch, loss, iou)
+        print(epoch, loss/M, iou/M)
         return model
 
 if __name__ == '__main__':
