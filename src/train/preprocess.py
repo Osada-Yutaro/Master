@@ -56,7 +56,7 @@ def load_targets():
                     data[number][obj_id] = (h, w, x, y)
     return data
 
-def load_images():
+def load_images(num):
     import os
     import cv2
     import numpy as np
@@ -68,15 +68,11 @@ def load_images():
     view = os.path.join(PETS09, S1, L1, Time_13_57, View_001)
     N = 221
 
-    res = []
+    filename = 'frame_' + str(num).zfill(4) + '.jpg'
+    path = os.path.join(view, filename)
+    res = cv2.imread(path)/255
 
-    for i in range(N):
-        filename = 'frame_' + str(i).zfill(4) + '.jpg'
-        path = os.path.join(view, filename)
-        img = cv2.imread(path)/255
-        res.append(img)
-
-    return np.array(res)
+    return res
 
 def image_in_frame(frame_size, image):
     import numpy as np

@@ -39,12 +39,12 @@ def load_data(num):
     X = []
     Y = []
 
-    image = load_images()[num]
+    image = load_images(num)
     targets = load_targets()[num]
 
     HEIGHT, WIDTH, _ = image.shape
+    print(image.shape)
     WIN_SIZE = 96
-    M = 4
 
     x0 = np.random.randint(0, WIN_SIZE)
     y0 = np.random.randint(0, WIN_SIZE)
