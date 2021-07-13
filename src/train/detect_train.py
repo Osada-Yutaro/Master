@@ -29,7 +29,6 @@ def crop(image, bb, position, image_size, win_size):
     else:
         h_targ, w_targ, x_targ, y_targ = newbb
         Y = [h_targ, w_targ, x_targ, y_targ, 1]
-    print(X, Y)
     return X, Y
 
 def key(bb):
@@ -50,13 +49,13 @@ def load_data(num):
     y0 = np.random.randint(0, WIN_SIZE)
     for x in range(x0, WIDTH - WIN_SIZE, WIN_SIZE//3):
         for y in range(y0, HEIGHT - WIN_SIZE, WIN_SIZE//3):
-            crop = image[y:y + WIN_SIZE, x:x + WIN_SIZE]
+            cropped_win = image[y:y + WIN_SIZE, x:x + WIN_SIZE]
             targ = [0, 0, 0, 0, 0]
             for item in targets.items():
                 id, bb = item
                 _, newbb = crop(image, bb, (x, y), (HEIGHT, WIDTH), WIN_SIZE)
                 targ = max(targ, newbb, key=key)
-            X.append(crop)
+            X.append(cropped_win)
             Y.append(targ)
     return np.array(X), np.array(Y)
 
