@@ -29,6 +29,7 @@ def crop(image, bb, position, image_size, win_size):
     else:
         h_targ, w_targ, x_targ, y_targ = newbb
         Y = [h_targ, w_targ, x_targ, y_targ, 1]
+    print(X, Y)
     return X, Y
 
 def key(bb):
@@ -43,7 +44,6 @@ def load_data(num):
     targets = load_targets()[num]
 
     HEIGHT, WIDTH, _ = image.shape
-    print(image.shape)
     WIN_SIZE = 96
 
     x0 = np.random.randint(0, WIN_SIZE)
