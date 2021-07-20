@@ -135,7 +135,7 @@ def main():
             loss += history.history['loss'][0]
             iou += history.history['iou'][0]
             with open('/kw_resources/training_log.txt', mode='a') as f:
-                message = str(i) + ' ' + str(loss) + ' ' + str(iou)
+                message = str(i) + ' ' + str(loss) + ' ' + str(iou) + '\n'
                 f.write(message)
         print(epoch, loss/M, iou/M)
         return model
