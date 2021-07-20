@@ -124,8 +124,8 @@ def detect_model():
 def main():
     model = detect_model()
 
-    M = 180
-    N = 10000
+    M = 10
+    N = 1000
     for epoch in range(N):
         loss = 0
         iou = 0
