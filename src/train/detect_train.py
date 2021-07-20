@@ -137,7 +137,7 @@ def main():
         with open('/kw_resources/training_log.txt', mode='a') as f:
             message = str(epoch) + ' ' + str(loss/M) + ' ' + str(iou/M) + '\n'
             f.write(message)
-        return model
+    return model
 
 if __name__ == '__main__':
     main()
