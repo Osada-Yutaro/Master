@@ -1,7 +1,7 @@
 import os
 from tensorflow.keras import applications
 from tensorflow.keras.models import Model
-from tensorflow.keras.layers import Dense, Input, Flatten, BatchNormalization
+from tensorflow.keras.layers import Dense, Input, Flatten, BatchNormalization, Conv2D
 from tensorflow.keras.optimizers import SGD, Adam
 import numpy as np
 from preprocess import load_images, load_targets, boundingbox_in_window, image_in_frame
@@ -108,15 +108,21 @@ def detect_model():
     #hidden_3 = get_layer(vgg16, 'block3_conv3').output
 
     x = vgg16.output
+    x = Conv2D(filters=256, kernel_size=(1, 1), strides=(1, 1), padding='same')(x)
+    x = BatchNormalization()(x)
+    x = Conv2D(filters=64, kernel_size=(3, 3), strides=(1, 1), padding='same')(x)
+    x = BatchNormalization()(x)
+    x = Conv2D(filters=128, kernel_size=(1, 1), strides=(1, 1), padding='same')(x)
+    x = BatchNormalization()(x)
     x = Flatten()(x)
-    x = Dense(1024, activation='relu')(x)
+    x = Dense(512, activation='relu')(x)
     x = BatchNormalization()(x)
-    x = Dense(1024, activation='relu')(x)
+    x = Dense(512, activation='relu')(x)
     x = BatchNormalization()(x)
+    x = Dense(5, name='output')(x)
     x = Dense(5, name='output')(x)
 
     model = Model(inputs=vgg16.input, outputs=[x])
-    sgd = SGD(learning_rate=1e-4, momentum=0.9)
     adam = Adam(learning_rate=1e-4, beta_1=0.9, beta_2=0.999)
     model.compile(loss=loss_func, optimizer=adam, metrics=[iou])
     return model
