@@ -122,7 +122,7 @@ def detect_model():
     x = Dense(5, name='output')(x)
 
     model = Model(inputs=vgg16.input, outputs=[x])
-    adam = Adam(learning_rate=1e-4, beta_1=0.9, beta_2=0.999)
+    adam = Adam(learning_rate=1e-3, beta_1=0.9, beta_2=0.999)
     model.compile(loss=loss_func, optimizer=adam, metrics=[iou])
     return model
 
