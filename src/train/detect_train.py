@@ -50,6 +50,7 @@ def load_data(num):
     for x in range(x0, WIDTH - WIN_SIZE, WIN_SIZE//3):
         for y in range(y0, HEIGHT - WIN_SIZE, WIN_SIZE//3):
             cropped_win = image[y:y + WIN_SIZE, x:x + WIN_SIZE]
+            cropped_win = cv2.resize(cropped_win, (224, 224))
             targ = [0, 0, 0, 0, 0]
             for item in targets.items():
                 id, bb = item
@@ -98,7 +99,7 @@ def iou(groundtruth, predict):
     return K.sum(true_positive)/(K.sum(true + positive) + K.epsilon())
 
 def detect_model():
-    vgg16 = applications.vgg16.VGG16(weights='imagenet', include_top=False, input_tensor=Input(shape=(96, 96, 3)))
+    vgg16 = applications.vgg16.VGG16(weights='imagenet', include_top=False, input_tensor=Input(shape=(224, 224, 3)))
 
     for layer in vgg16.layers:
         layer.trainable = False
@@ -130,18 +131,32 @@ def main():
     model = detect_model()
 
     M = 180
-    N = 10000
+    N = 1
     for epoch in range(N):
-        loss = 0
-        iou = 0
+        train_loss = 0
+        train_iou = 0
         for i in range(M):
             X, Y = load_data(i)
             history = model.fit(x=X, y={'output':Y}, epochs=1, batch_size=4, verbose=0)
-            loss += history.history['loss'][0]
-            iou += history.history['iou'][0]
-        with open('/kw_resources/training_log.txt', mode='a') as f:
-            message = str(epoch) + ' ' + str(loss/M) + ' ' + str(iou/M) + '\n'
+            train_loss += history.history['loss'][0]
+            train_iou += history.history['iou'][0]
+
+        valid_loss = 0
+        valid_iou = 0
+        for i in range(M, 221):
+            X, Y = load_data(i)
+            ev = model.evaluate(x=X, y={'output':Y}, verbose=0)
+            print(ev)
+        with open('./training_log.txt', mode='a') as f:
+            train_loss = train_loss/M
+            train_iou = train_iou/M
+            message = str(epoch) + ' ' + str(train_loss/M) + ' ' + str(train_iou/M) + '\n'
             f.write(message)
+
+    for i in range(M, 221):
+        X, Y = load_data(i)
+        ev = model.evaluate(x=X, y={'output':Y}, verbose=0)
+        print(ev)
     return model
 
 if __name__ == '__main__':
