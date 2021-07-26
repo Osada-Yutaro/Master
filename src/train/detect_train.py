@@ -147,7 +147,7 @@ def main():
             X, Y = load_data(i)
             ev = model.evaluate(x=X, y={'output':Y}, verbose=0)
             print(ev)
-        with open('./training_log.txt', mode='a') as f:
+        with open('/kw_resources/training_log.txt', mode='a') as f:
             train_loss = train_loss/M
             train_iou = train_iou/M
             message = str(epoch) + ' ' + str(train_loss/M) + ' ' + str(train_iou/M) + '\n'
