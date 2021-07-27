@@ -46,3 +46,9 @@ def FP(groundtruth, predict):
 
 def FN(groundtruth, predict):
     return 1 - FP(groundtruth, predict)
+
+def IoU(groundtruth, predict):
+    tp = TP(groundtruth, predict)
+    tn = TN(groundtruth, predict)
+    fp = FP(groundtruth, predict)
+    return tp/(tn + tp + fp)
