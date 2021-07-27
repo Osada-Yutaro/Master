@@ -1,12 +1,15 @@
 import os
+import datetime
 from tensorflow.keras import applications
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Dense, Input, Flatten, BatchNormalization, Conv2D
 from tensorflow.keras.optimizers import SGD, Adam
 import numpy as np
+from tensorflow.python import training
 from preprocess import load_images, load_targets, boundingbox_in_window, image_in_frame
 from tensorflow.keras import backend as K
 import cv2
+from metrics import TP, TN, FP, FN
 
 """
     modelの名前が一致する層を返す
@@ -67,37 +70,6 @@ def loss_func(y_targ, y_pred, C=1.0):
     loss = K.sum(K.square(y_targ - y_pred), axis=1)*conf_target + C*(1 - conf_target)*K.square(conf_target - conf_predic)
     return loss
 
-def iou(groundtruth, predict):
-    def clip(x, boarder=0):
-        return K.cast(K.greater(x, boarder), K.floatx())
-    h_ground = clip(groundtruth[:, 0])
-    w_ground = clip(groundtruth[:, 1])
-    x_ground = clip(groundtruth[:, 2])
-    y_ground = clip(groundtruth[:, 3])
-    c_ground = clip(groundtruth[:, 4], 0.5)
-
-    h_predic = clip(predict[:, 0])
-    w_predic = clip(predict[:, 1])
-    x_predic = clip(predict[:, 2])
-    y_predic = clip(predict[:, 3])
-    c_predic = clip(predict[:, 4], 0.5)
-
-    def k_max(a, b):
-        cond = K.cast(K.greater(a, b), K.floatx())
-        return cond*a + (1 - cond)*b
-    def k_min(a, b):
-        cond = K.cast(K.less(a, b), K.floatx())
-        return cond*a + (1 - cond)*b
-
-    dx = k_min(x_ground + w_ground, x_predic + w_predic) - k_max(x_ground, x_predic)
-    dy = k_min(y_ground + h_ground, y_predic + h_predic) - k_max(y_ground, y_predic)
-
-    true_positive = K.cast(K.greater(dx, 0), K.floatx())*K.cast(K.greater(dy, 0), K.floatx())*c_ground*c_predic
-    true = h_ground*w_ground*c_ground
-    positive = h_predic*w_predic*c_predic
-    
-    return K.sum(true_positive)/(K.sum(true + positive) + K.epsilon())
-
 def detect_model():
     vgg16 = applications.vgg16.VGG16(weights='imagenet', include_top=False, input_tensor=Input(shape=(224, 224, 3)))
 
@@ -124,39 +96,74 @@ def detect_model():
 
     model = Model(inputs=vgg16.input, outputs=[x])
     adam = Adam(learning_rate=1e-3, beta_1=0.9, beta_2=0.999)
-    model.compile(loss=loss_func, optimizer=adam, metrics=[iou])
+    model.compile(loss=loss_func, optimizer=adam, metrics=[TP, TN, FP, FN])
     return model
 
+def join_nums(*args):
+    s = ''
+    for x in args:
+        s = s + ' ' + str(x)
+    return s + '\n'
+
 def main():
+    now = datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S')
+    log_file_name = 'training_log_' + now + '.txt'
+    log_file_path = os.path.join('/', 'kw_resources', log_file_name)
+    with open(log_file_path, mode='w') as f:
+        message = 'Epoch Train_Loss Train_TP Train_TN Train_FP Train_FN Train_IoU Valid_Loss Valid_TP Valid_TN Valid_FP Valid_FN Valid_IoU\n'
+        f.write(message)
     model = detect_model()
 
     M = 180
     N = 1
     for epoch in range(N):
         train_loss = 0
-        train_iou = 0
+        train_tp = 0
+        train_tn = 0
+        train_fp = 0
+        train_fn = 0
         for i in range(M):
             X, Y = load_data(i)
             history = model.fit(x=X, y={'output':Y}, epochs=1, batch_size=4, verbose=0)
             train_loss += history.history['loss'][0]
-            train_iou += history.history['iou'][0]
+            train_tp += history.history['TP'][0]
+            train_tn += history.history['TN'][0]
+            train_fp += history.history['FP'][0]
+            train_fn += history.history['FN'][0]
 
         valid_loss = 0
-        valid_iou = 0
+        valid_tp = 0
+        valid_tn = 0
+        valid_fp = 0
+        valid_fn = 0
         for i in range(M, 221):
             X, Y = load_data(i)
-            ev = model.evaluate(x=X, y={'output':Y}, verbose=0)
-            print(ev)
-        with open('/kw_resources/training_log.txt', mode='a') as f:
-            train_loss = train_loss/M
-            train_iou = train_iou/M
-            message = str(epoch) + ' ' + str(train_loss/M) + ' ' + str(train_iou/M) + '\n'
+            evaluated = model.evaluate(x=X, y={'output':Y}, verbose=0)
+            valid_loss += evaluated[0]
+            valid_tp += evaluated[1]
+            valid_tn += evaluated[2]
+            valid_fp += evaluated[3]
+            valid_fn += evaluated[4]
+        with open(log_file_path, mode='a') as f:
+            train_iou = train_tp/(train_tp + train_tn + train_fp)
+            valid_iou = valid_tp/(valid_tp + valid_tn + valid_fp)
+            message = join_nums(
+                epoch,
+                train_loss/M,
+                train_tp/M,
+                train_tn/M,
+                train_fp/M,
+                train_fn/M,
+                train_iou,
+                valid_loss/M,
+                valid_tp/M,
+                valid_tn/M,
+                valid_fp/M,
+                valid_fn/M,
+                valid_iou
+                )
             f.write(message)
 
-    for i in range(M, 221):
-        X, Y = load_data(i)
-        ev = model.evaluate(x=X, y={'output':Y}, verbose=0)
-        print(ev)
     return model
 
 if __name__ == '__main__':
