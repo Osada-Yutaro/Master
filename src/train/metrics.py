@@ -10,7 +10,7 @@ def k_min(a, b):
 def clip(x, bottom=0., top=1.):
     return k_min(k_max(x, bottom), top)
 def binalize(x, boarder):
-    return K.cast(K.greater(x, boarder), K.cast(K.floatx()))
+    return K.cast(K.greater(x, boarder), K.floatx())
 
 def parse_BB(boundingbox):
     return (
@@ -28,7 +28,9 @@ def TP(groundtruth, predict):
     intersection_w = k_min(x_ground + w_ground, x_predic + w_predic) - k_max(x_ground, x_predic)
     intersection_h = k_min(y_ground + h_ground, y_predic + h_predic) - k_max(y_ground, y_predic)
 
-    is_intersecting = K.cast(K.greater(intersection_w, 0), K.floatx())*K.cast(K.greater(intersection_h, 0), K.floatx())*c_ground*c_predic
+    w_has_value = K.cast(K.greater(intersection_w, 0), K.floatx())
+    h_has_value = K.cast(K.greater(intersection_h, 0), K.floatx())
+    is_intersecting = w_has_value*h_has_value*c_ground*c_predic
     intersection = is_intersecting*intersection_w*intersection_h
     return intersection
 
