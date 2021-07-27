@@ -116,6 +116,7 @@ def main():
 
     M = 180
     N = 100
+    L = 221 - M
     for epoch in range(N):
         train_loss = 0
         train_tp = 0
@@ -155,11 +156,11 @@ def main():
                 train_fp/M,
                 train_fn/M,
                 train_iou,
-                valid_loss/M,
-                valid_tp/M,
-                valid_tn/M,
-                valid_fp/M,
-                valid_fn/M,
+                valid_loss/L,
+                valid_tp/L,
+                valid_tn/L,
+                valid_fp/L,
+                valid_fn/L,
                 valid_iou
                 )
             f.write(message)
