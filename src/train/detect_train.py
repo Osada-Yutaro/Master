@@ -4,6 +4,7 @@ from tensorflow.keras import applications
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Dense, Input, Flatten, BatchNormalization, Conv2D
 from tensorflow.keras.optimizers import SGD, Adam
+from tensorflow.keras.callbacks import LearningRateScheduler
 import numpy as np
 from tensorflow.python import training
 from preprocess import load_images, load_targets, boundingbox_in_window, image_in_frame
@@ -70,6 +71,14 @@ def loss_func(y_targ, y_pred, C=1.0):
     loss = K.sum(K.square(y_targ - y_pred), axis=1)*conf_target + C*(1 - conf_target)*K.square(conf_target - conf_predic)
     return loss
 
+def lr_scheduler(epoch):
+    if epoch < 30:
+        return 1e-2
+    elif epoch < 40:
+        return 1e-3
+    else:
+        return 1e-4
+
 def detect_model():
     vgg16 = applications.vgg16.VGG16(weights='imagenet', include_top=False, input_tensor=Input(shape=(224, 224, 3)))
 
@@ -118,6 +127,7 @@ def main():
     M = 180
     N = 100
     L = 221 - M
+    scheduler = LearningRateScheduler(lr_scheduler)
     for epoch in range(N):
         train_loss = 0
         train_tp = 0
@@ -126,7 +136,15 @@ def main():
         train_fn = 0
         for i in range(M):
             X, Y = load_data(i)
-            history = model.fit(x=X, y={'output':Y}, epochs=1, batch_size=4, verbose=0)
+            history = model.fit(
+                x=X,
+                y={'output':Y},
+                epochs=1,
+                batch_size=4,
+                verbose=0,
+                callbacks=[scheduler],
+                initial_epoch=epoch
+            )
             train_loss += history.history['loss'][0]
             train_tp += history.history['TP'][0]
             train_tn += history.history['TN'][0]
