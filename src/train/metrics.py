@@ -47,7 +47,10 @@ def FP(groundtruth, predict):
     return positive - TP(groundtruth, predict)
 
 def FN(groundtruth, predict):
-    return 1 - FP(groundtruth, predict)
+    h_ground, w_ground, _, _, c_ground = parse_BB(groundtruth)
+    truth = h_ground*w_ground*c_ground
+    false = 1 - truth
+    return false - FP(groundtruth, predict)
 
 def IoU(groundtruth, predict):
     tp = TP(groundtruth, predict)
