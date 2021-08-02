@@ -107,8 +107,9 @@ def join_nums(*args):
 
 def main():
     now = datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S')
-    log_file_name = 'training_log_' + now + '.txt'
-    log_file_path = os.path.join('/', 'kw_resources', log_file_name)
+    log_file_name = now + '.txt'
+    log_file_path = os.path.join('/', 'kw_resources', 'Master', 'Log', log_file_name)
+    model_file_path = os.path.join('/', 'kw_resources', 'Master', 'Model', now)
     with open(log_file_path, mode='w') as f:
         message = 'Epoch Train_Loss Train_TP Train_TN Train_FP Train_FN Train_IoU Valid_Loss Valid_TP Valid_TN Valid_FP Valid_FN Valid_IoU\n'
         f.write(message)
@@ -165,6 +166,7 @@ def main():
                 )
             f.write(message)
 
+    model.save(model_file_path)
     return model
 
 if __name__ == '__main__':
