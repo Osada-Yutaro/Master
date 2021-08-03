@@ -136,6 +136,8 @@ def main():
         train_fn = 0
         for i in range(M):
             X, Y = load_data(i)
+            X = X[0:20]
+            Y = Y[0:20]
             history = model.fit(
                 x=X,
                 y={'output':Y},
@@ -145,6 +147,7 @@ def main():
                 callbacks=[scheduler],
                 initial_epoch=epoch
             )
+            print(history.history)
             train_loss += history.history['loss'][0]
             train_tp += history.history['TP'][0]
             train_tn += history.history['TN'][0]
