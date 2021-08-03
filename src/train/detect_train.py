@@ -142,7 +142,7 @@ def main():
                 verbose=0,
                 initial_epoch=epoch
             )
-            train_loss += history.history['loss'][0]
+            train_loss += history.history['loss'][epoch]
             train_tp += history.history['TP'][epoch]
             train_tn += history.history['TN'][epoch]
             train_fp += history.history['FP'][epoch]
