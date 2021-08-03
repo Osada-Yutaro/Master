@@ -143,10 +143,10 @@ def main():
                 initial_epoch=epoch
             )
             train_loss += history.history['loss'][0]
-            train_tp += history.history['TP'][0]
-            train_tn += history.history['TN'][0]
-            train_fp += history.history['FP'][0]
-            train_fn += history.history['FN'][0]
+            train_tp += history.history['TP'][epoch]
+            train_tn += history.history['TN'][epoch]
+            train_fp += history.history['FP'][epoch]
+            train_fn += history.history['FN'][epoch]
 
         valid_loss = 0
         valid_tp = 0
