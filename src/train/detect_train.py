@@ -98,7 +98,7 @@ def detect_model():
 
     model = Model(inputs=vgg16.input, outputs=[x])
     lr_scheduler = ExponentialDecay(
-        initial_learning_rate=1e-2,
+        initial_learning_rate=1e-3,
         decay_steps=30,
         decay_rate=1e-1,
         staircase=True
