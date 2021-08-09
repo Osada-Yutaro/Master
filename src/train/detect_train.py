@@ -99,7 +99,7 @@ def detect_model():
     model = Model(inputs=vgg16.input, outputs=[x])
     lr_scheduler = ExponentialDecay(
         initial_learning_rate=1e-3,
-        decay_steps=30,
+        decay_steps=40,
         decay_rate=1e-1,
         staircase=True
     )
@@ -139,7 +139,7 @@ def main():
                 y={'output':Y},
                 epochs=epoch + 1,
                 batch_size=4,
-                verbose=0,
+                verbose=2,
                 initial_epoch=epoch
             )
             train_loss += history.history['loss'][0]
