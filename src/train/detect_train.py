@@ -103,7 +103,7 @@ def detect_model():
         decay_rate=1e-1,
         staircase=True
     )
-    adam = Adam(learning_rate=lr_scheduler, beta_1=0.9, beta_2=0.999)
+    adam = Adam(learning_rate=1e-3, beta_1=0.9, beta_2=0.999)
     model.compile(loss=loss_func, optimizer=adam, metrics=[TP, TN, FP, FN])
     return model
 
