@@ -25,8 +25,14 @@ def TP(groundtruth, predict):
     h_ground, w_ground, x_ground, y_ground, c_ground = parse_BB(groundtruth)
     h_predic, w_predic, x_predic, y_predic, c_predic = parse_BB(predict)
 
-    intersection_w = k_min(x_ground + w_ground, x_predic + w_predic) - k_max(x_ground, x_predic)
-    intersection_h = k_min(y_ground + h_ground, y_predic + h_predic) - k_max(y_ground, y_predic)
+    right_edge = k_min(x_ground + w_ground/2, x_predic + w_predic/2)
+    left_edge = k_max(x_ground - w_ground/2, x_predic - w_predic/2)
+
+    bottom_edge = k_min(y_ground + h_ground/2, y_predic + h_predic/2)
+    top_edge = k_max(y_ground - h_ground/2, y_predic - h_predic/2)
+
+    intersection_w = right_edge - left_edge
+    intersection_h = bottom_edge - top_edge
 
     w_has_value = K.cast(K.greater(intersection_w, 0), K.floatx())
     h_has_value = K.cast(K.greater(intersection_h, 0), K.floatx())

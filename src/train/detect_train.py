@@ -134,20 +134,17 @@ def main():
         train_fn = 0
         for i in range(M):
             X, Y = load_data(i)
-            history = model.fit(
-                x=X,
-                y={'output':Y},
-                epochs=epoch + 1,
-                batch_size=4,
-                verbose=2,
-                initial_epoch=epoch
-            )
-            train_loss += history.history['loss'][0]
-            train_tp += history.history['TP'][0]
-            train_tn += history.history['TN'][0]
-            train_fp += history.history['FP'][0]
-            train_fn += history.history['FN'][0]
-            print(history.history)
+            length = len(X)
+            BATCH_SIZE = 12
+            for batch in range(0, length, BATCH_SIZE):
+                end = min(batch + BATCH_SIZE, length)
+                metrics = model.train_on_batch(x=X[batch:batch+BATCH_SIZE], y=Y[batch:batch+BATCH_SIZE])
+                print(metrics)
+                train_loss += metrics['loss']*(end - batch)
+                train_tp += metrics['TP']*(end - batch)
+                train_tn += metrics['TN']*(end - batch)
+                train_fp += metrics['FP']*(end - batch)
+                train_fn += metrics['FN']*(end - batch)
 
         valid_loss = 0
         valid_tp = 0
