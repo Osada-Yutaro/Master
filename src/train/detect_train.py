@@ -138,7 +138,7 @@ def main():
             BATCH_SIZE = 12
             for batch in range(0, length, BATCH_SIZE):
                 end = min(batch + BATCH_SIZE, length)
-                metrics = model.train_on_batch(x=X[batch:batch+BATCH_SIZE], y=Y[batch:batch+BATCH_SIZE])
+                metrics = model.train_on_batch(x=X[batch:batch+BATCH_SIZE], y={'output':Y[batch:batch+BATCH_SIZE]})
                 print(metrics)
                 train_loss += metrics['loss']*(end - batch)
                 train_tp += metrics['TP']*(end - batch)
