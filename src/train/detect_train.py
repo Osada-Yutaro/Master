@@ -11,7 +11,7 @@ from tensorflow.python import training
 from preprocess import load_images, load_targets, boundingbox_in_window, image_in_frame
 from tensorflow.keras import backend as K
 import cv2
-from metrics import TP, TN, FP, FN
+from metrics import TP, TN, FP, FN, IoU
 
 """
     modelの名前が一致する層を返す
@@ -97,14 +97,8 @@ def detect_model():
     x = Dense(5, name='output')(x)
 
     model = Model(inputs=vgg16.input, outputs=[x])
-    lr_scheduler = ExponentialDecay(
-        initial_learning_rate=1e-3,
-        decay_steps=40,
-        decay_rate=1e-1,
-        staircase=True
-    )
-    adam = Adam(learning_rate=1e-1, beta_1=0.9, beta_2=0.999)
-    model.compile(loss=loss_func, optimizer=adam, metrics=[TP, TN, FP, FN])
+    adam = Adam(learning_rate=5e-2, beta_1=0.9, beta_2=0.999)
+    model.compile(loss=loss_func, optimizer=adam, metrics=[TP, TN, FP, FN, IoU])
     return model
 
 def join_nums(*args):
@@ -124,7 +118,7 @@ def main():
     model = detect_model()
 
     M = 180
-    N = 100
+    N = 10
     L = 221 - M
     for epoch in range(N):
         train_loss = 0
@@ -132,25 +126,27 @@ def main():
         train_tn = 0
         train_fp = 0
         train_fn = 0
+        train_iou = 0
         for i in range(M):
             X, Y = load_data(i)
             length = len(X)
-            BATCH_SIZE = 12
+            BATCH_SIZE = 8
             for batch in range(0, length, BATCH_SIZE):
                 end = min(batch + BATCH_SIZE, length)
-                metrics = model.train_on_batch(x=X[batch:batch+BATCH_SIZE], y={'output':Y[batch:batch+BATCH_SIZE]})
-                print(metrics)
-                train_loss += metrics['loss']*(end - batch)
-                train_tp += metrics['TP']*(end - batch)
-                train_tn += metrics['TN']*(end - batch)
-                train_fp += metrics['FP']*(end - batch)
-                train_fn += metrics['FN']*(end - batch)
+                metrics = model.train_on_batch(x=X[batch:batch+BATCH_SIZE], y={'output':Y[batch:batch+BATCH_SIZE]}, verbose=0)
+                train_loss += metrics['loss']*(end - batch)/length
+                train_tp += metrics['TP']*(end - batch)/length
+                train_tn += metrics['TN']*(end - batch)/length
+                train_fp += metrics['FP']*(end - batch)/length
+                train_fn += metrics['FN']*(end - batch)/length
+                train_iou += metrics['IoU']*(end - batch)/length
 
         valid_loss = 0
         valid_tp = 0
         valid_tn = 0
         valid_fp = 0
         valid_fn = 0
+        valid_iou = 0
         for i in range(M, 221):
             X, Y = load_data(i)
             evaluated = model.evaluate(x=X, y={'output':Y}, verbose=0)
@@ -159,9 +155,8 @@ def main():
             valid_tn += evaluated[2]
             valid_fp += evaluated[3]
             valid_fn += evaluated[4]
+            valid_iou += evaluated[5]
         with open(log_file_path, mode='a') as f:
-            train_iou = train_tp/(train_tp + train_tn + train_fp)
-            valid_iou = valid_tp/(valid_tp + valid_tn + valid_fp)
             message = join_nums(
                 epoch,
                 train_loss/M,
