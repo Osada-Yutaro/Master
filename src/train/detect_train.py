@@ -130,7 +130,7 @@ def main():
         for i in range(M):
             X, Y = load_data(i)
             length = len(X)
-            BATCH_SIZE = 8
+            BATCH_SIZE = 4
             for batch in range(0, length, BATCH_SIZE):
                 end = min(batch + BATCH_SIZE, length)
                 metrics = model.train_on_batch(x=X[batch:batch+BATCH_SIZE], y={'output':Y[batch:batch+BATCH_SIZE]})
