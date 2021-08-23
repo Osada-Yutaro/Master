@@ -62,4 +62,4 @@ def IoU(groundtruth, predict):
     tp = TP(groundtruth, predict)
     tn = TN(groundtruth, predict)
     fp = FP(groundtruth, predict)
-    return tp/(tn + tp + fp)
+    return (tp + 1e-4)/(tn + tp + fp + 1e-4)
