@@ -56,8 +56,8 @@ def draw(src, bb, color):
     w = int(w*224)
     xc = int(xc*224)
     yc = int(yc*224)
-    left_top = (xc - w/2, yc - h/2)
-    right_bot = (xc + w/2, yc + h/2)
+    left_top = (xc - w//2, yc - h//2)
+    right_bot = (xc + w//2, yc + h//2)
     dst = cv2.rectangle(src, left_top, right_bot, color, 4)
     return dst
 
