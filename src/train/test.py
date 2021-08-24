@@ -62,20 +62,22 @@ def main():
     counter = 0
     path = os.path.join('/', 'kw_resources', 'Test')
     for i in range(221):
-        XY = load_data(i)
-        for pair in XY:
-            X, Y = pair
-            if Y[4] < 0.5:
+        X, Y = load_data(i)
+        N = len(X)
+        for j in range(N):
+            x = X[j]
+            y = Y[j]
+            if y[4] < 0.5:
                 continue
             predict = [0.4, 0.4, 0.5, 0.5, 1.0]
-            img = draw(X, Y, (0, 255, 0))
+            img = draw(x, y, (0, 255, 0))
             img = draw(img, predict, (0, 255, 0))
 
-            tp = TP(Y, predict)
-            tn = TN(Y, predict)
-            fp = FP(Y, predict)
-            fn = FN(Y, predict)
-            iou = IoU(Y, predict)
+            tp = TP(y, predict)
+            tn = TN(y, predict)
+            fp = FP(y, predict)
+            fn = FN(y, predict)
+            iou = IoU(y, predict)
 
             logpath = os.path.join(path, 'Log', str(counter) + '.txt')
             imgpath = os.path.join(path, 'Image', str(counter) + '.png')
