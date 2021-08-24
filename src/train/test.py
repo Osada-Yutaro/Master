@@ -48,6 +48,7 @@ def load_data(num):
     return np.array(X), np.array(Y)
 
 def draw(src, bb, color):
+    print(bb)
     h, w, xc, yc, c = bb
     if c < 0.5:
         return src
