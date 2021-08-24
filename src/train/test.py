@@ -64,6 +64,7 @@ def main():
         XY = load_data(i)
         for pair in XY:
             X, Y = XY
+            print(Y)
             predict = [0.4, 0.4, 0.5, 0.5, 1.0]
             img = draw(X, Y, (0, 255, 0))
             img = draw(img, predict, (0, 255, 0))
