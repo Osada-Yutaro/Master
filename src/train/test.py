@@ -65,16 +65,17 @@ def main():
         XY = load_data(i)
         for pair in XY:
             X, Y = pair
-            ground = Y[0], Y[1], Y[2], Y[3], Y[4], 1.
+            if Y[4] < 0.5:
+                continue
             predict = [0.4, 0.4, 0.5, 0.5, 1.0]
-            img = draw(X, ground, (0, 255, 0))
+            img = draw(X, Y, (0, 255, 0))
             img = draw(img, predict, (0, 255, 0))
 
-            tp = TP(ground, predict)
-            tn = TN(ground, predict)
-            fp = FP(ground, predict)
-            fn = FN(ground, predict)
-            iou = IoU(ground, predict)
+            tp = TP(Y, predict)
+            tn = TN(Y, predict)
+            fp = FP(Y, predict)
+            fn = FN(Y, predict)
+            iou = IoU(Y, predict)
 
             logpath = os.path.join(path, 'Log', str(counter) + '.txt')
             imgpath = os.path.join(path, 'Image', str(counter) + '.png')
