@@ -94,7 +94,7 @@ def detect_model():
     x = BatchNormalization()(x)
     x = Dense(512, activation='relu')(x)
     x = BatchNormalization()(x)
-    x = Dense(5)(x)
+    x = Dense(5, name='output')(x)
 
     model = Model(inputs=vgg16.input, outputs=[x])
     adam = Adam(learning_rate=5e-3, beta_1=0.9, beta_2=0.999)
