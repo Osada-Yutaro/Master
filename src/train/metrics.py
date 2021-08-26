@@ -14,11 +14,11 @@ def binalize(x, boarder):
 
 def parse_BB(boundingbox):
     return (
-        clip(boundingbox[:, 0]),
-        clip(boundingbox[:, 1]),
-        clip(boundingbox[:, 2]),
-        clip(boundingbox[:, 3]),
-        binalize(boundingbox[:, 4], 0.5))
+        clip(boundingbox[:, :, 0]),
+        clip(boundingbox[:, :, 1]),
+        clip(boundingbox[:, :, 2]),
+        clip(boundingbox[:, :, 3]),
+        binalize(boundingbox[:, :, 4], 0.5))
 
 
 def TP(groundtruth, predict):

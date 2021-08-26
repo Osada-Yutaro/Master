@@ -2,7 +2,7 @@ import os
 import datetime
 from tensorflow.keras import applications
 from tensorflow.keras.models import Model
-from tensorflow.keras.layers import Dense, Input, Flatten, BatchNormalization, Conv2D
+from tensorflow.keras.layers import Dense, Input, Flatten, BatchNormalization, Conv2D, Reshape
 from tensorflow.keras.optimizers import SGD, Adam
 from tensorflow.keras.callbacks import LearningRateScheduler
 from tensorflow.keras.optimizers.schedules import ExponentialDecay
@@ -48,7 +48,7 @@ def load_data(num):
     targets = load_targets()[num]
 
     HEIGHT, WIDTH, _ = image.shape
-    WIN_SIZE = 96
+    WIN_SIZE = 192
 
     x0 = np.random.randint(0, WIN_SIZE)
     y0 = np.random.randint(0, WIN_SIZE)
@@ -94,7 +94,8 @@ def detect_model():
     x = BatchNormalization()(x)
     x = Dense(512, activation='relu')(x)
     x = BatchNormalization()(x)
-    x = Dense(5, name='output')(x)
+    x = Dense(20)(x)
+    x = Reshape((4, 5), name='output')(x)
 
     model = Model(inputs=vgg16.input, outputs=[x])
     adam = Adam(learning_rate=5e-3, beta_1=0.9, beta_2=0.999)
