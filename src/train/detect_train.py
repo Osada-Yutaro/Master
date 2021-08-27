@@ -118,7 +118,7 @@ def main():
     model = detect_model()
 
     M = 180
-    N = 10
+    N = 100
     L = 221 - M
     for epoch in range(N):
         train_loss = 0
