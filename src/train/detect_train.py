@@ -127,28 +127,19 @@ def main():
         train_fp = 0
         train_fn = 0
         train_iou = 0
-        for i in range(M):
+        for i in range(N):
             X, Y = load_data(i)
             length = len(X)
-            S = 0
             BATCH_SIZE = 4
             for batch in range(0, length, BATCH_SIZE):
                 end = min(batch + BATCH_SIZE, length)
-                S += end - batch
                 metrics = model.train_on_batch(x=X[batch:batch+BATCH_SIZE], y={'output':Y[batch:batch+BATCH_SIZE]})
-                train_loss += metrics[0]*(end - batch)
-                train_tp += metrics[1]*(end - batch)
-                train_tn += metrics[2]*(end - batch)
-                train_fp += metrics[3]*(end - batch)
-                train_fn += metrics[4]*(end - batch)
-                train_iou += metrics[5]*(end - batch)
-
-            train_loss /= S
-            train_tp /= S
-            train_tn /= S
-            train_fp /= S
-            train_fn /= S
-            train_iou /= S
+                train_loss += metrics[0]*(end - batch)/length
+                train_tp += metrics[1]*(end - batch)/length
+                train_tn += metrics[2]*(end - batch)/length
+                train_fp += metrics[3]*(end - batch)/length
+                train_fn += metrics[4]*(end - batch)/length
+                train_iou += metrics[5]*(end - batch)/length
 
         valid_loss = 0
         valid_tp = 0
