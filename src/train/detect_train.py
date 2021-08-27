@@ -98,7 +98,7 @@ def detect_model():
 
     model = Model(inputs=vgg16.input, outputs=[x])
     adam = Adam(learning_rate=5e-3, beta_1=0.9, beta_2=0.999)
-    model.compile(loss=loss_func, optimizer=adam, metrics=[TP, TN, FP, FN, IoU])
+    model.compile(loss=loss_func, optimizer=adam, metrics=[TP, TN, FP, FN])
     return model
 
 def join_nums(*args):
@@ -134,12 +134,11 @@ def main():
             for batch in range(0, length, BATCH_SIZE):
                 end = min(batch + BATCH_SIZE, length)
                 metrics = model.train_on_batch(x=X[batch:batch+BATCH_SIZE], y={'output':Y[batch:batch+BATCH_SIZE]})
-                train_loss += metrics[0]*(end - batch)/length
-                train_tp += metrics[1]*(end - batch)/length
-                train_tn += metrics[2]*(end - batch)/length
-                train_fp += metrics[3]*(end - batch)/length
-                train_fn += metrics[4]*(end - batch)/length
-                train_iou += metrics[5]*(end - batch)/length
+                train_loss += metrics[0]/length
+                train_tp += metrics[1]/length
+                train_tn += metrics[2]/length
+                train_fp += metrics[3]/length
+                train_fn += metrics[4]/length
 
         valid_loss = 0
         valid_tp = 0
@@ -155,7 +154,9 @@ def main():
             valid_tn += evaluated[2]
             valid_fp += evaluated[3]
             valid_fn += evaluated[4]
-            valid_iou += evaluated[5]
+        
+        train_iou = train_tp/(train_tp + train_fp + train_tn)
+        valid_iou = valid_tp/(valid_tp + valid_fp + valid_tn)
         with open(log_file_path, mode='a') as f:
             message = join_nums(
                 epoch,
