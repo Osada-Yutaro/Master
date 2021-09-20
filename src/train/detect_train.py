@@ -8,7 +8,7 @@ from tensorflow.keras.callbacks import LearningRateScheduler
 from tensorflow.keras.optimizers.schedules import ExponentialDecay
 import numpy as np
 from tensorflow.python import training
-from preprocess import load_images, load_targets, boundingbox_in_window, image_in_frame
+from preprocess import load_images, load_targets, boundingbox_in_window, image_in_frame, point_in_window
 from tensorflow.keras import backend as K
 import cv2
 from metrics import TP, TN, FP, FN, IoU
@@ -22,23 +22,22 @@ def get_layer(model, name):
             return layer
     return None
 
-def crop(image, bb, position, image_size, win_size):
-    height, width = image_size
+def crop(image, center, position, window_size):
     x, y = position
-    newbb = boundingbox_in_window(image_size, (win_size, win_size), position, bb)
-    dst = image[y:y + win_size, x:x + win_size]
-    X = image_in_frame((win_size, win_size), dst)
+    new_center = point_in_window(window_size, position, center)
+    dst = image[y:y + window_size, x:x + window_size]
+    X = image_in_frame((window_size, window_size), dst)
     Y = None
-    if newbb is None:
-        Y = [0, 0, 0, 0, 0]
+    if new_center is None:
+        Y = [0, 0, 0]
     else:
-        h_targ, w_targ, x_targ, y_targ = newbb
-        Y = [h_targ, w_targ, x_targ, y_targ, 1]
+        xc, yc = new_center
+        Y = [xc, yc, 1]
     return X, Y
 
-def key(bb):
-    h, w, _, _, c = bb
-    return h*w*c
+def key(center):
+    _, _, c = center
+    return c
 
 def load_data(num):
     X = []
@@ -56,21 +55,31 @@ def load_data(num):
         for y in range(y0, HEIGHT - WIN_SIZE, WIN_SIZE//3):
             cropped_win = image[y:y + WIN_SIZE, x:x + WIN_SIZE]
             cropped_win = cv2.resize(cropped_win, (224, 224))
-            targ = [0, 0, 0, 0, 0]
+            targets = [[0 for _ in range(3)] for _ in range(5)]
             for item in targets.items():
                 id, bb = item
-                _, newbb = crop(image, bb, (x, y), (HEIGHT, WIDTH), WIN_SIZE)
-                targ = max(targ, newbb, key=key)
+                _, _, xc, yc = bb
+                center = (xc, yc)
+                _, new_center = crop(image, center, (x, y), WIN_SIZE)
+                targets.append(new_center)
+            targets.sort(key=key)
+            targets = targets[0:5]
             X.append(cropped_win)
-            Y.append(targ)
+            Y.append(targets)
     return np.array(X), np.array(Y)
 
-def loss_func(y_targ, y_pred, C=1.0):
-    conf_target = y_targ[:, 4]
-    conf_predic = y_pred[:, 4]
+def loss_func(targ, pred, C=1.0, LAMBDA=1.0):
+    position_target = targ[:, 0:2]
+    position_predic = pred[:, 0:2]
+    conf_target = targ[:, 2]
+    conf_predic = pred[:, 2]
 
-    loss = K.sum(K.square(y_targ - y_pred), axis=1)*conf_target + C*(1 - conf_target)*K.square(conf_target - conf_predic)
-    return loss
+    position_loss = K.sum(K.square(position_target - position_predic), axis=1)
+    conf_loss = K.square(conf_target - conf_predic)
+    exist_loss = position_loss*conf_target + LAMBDA*conf_loss
+    not_exist_loss = C*(1 - conf_target)*conf_loss
+
+    return exist_loss + not_exist_loss
 
 def detect_model():
     vgg16 = applications.vgg16.VGG16(weights='imagenet', include_top=False, input_tensor=Input(shape=(224, 224, 3)))
@@ -94,11 +103,12 @@ def detect_model():
     x = BatchNormalization()(x)
     x = Dense(512, activation='relu')(x)
     x = BatchNormalization()(x)
-    x = Dense(5, name='output')(x)
+    x = Dense(15)(x)
+    x = Reshape((5, 3), name='output')(x)
 
     model = Model(inputs=vgg16.input, outputs=[x])
-    adam = Adam(learning_rate=5e-3, beta_1=0.9, beta_2=0.999)
-    model.compile(loss=loss_func, optimizer=adam, metrics=[TP, TN, FP, FN])
+    adam = Adam(learning_rate=1e-3, beta_1=0.9, beta_2=0.999)
+    model.compile(loss=loss_func, optimizer=adam)
     return model
 
 def join_nums(*args):

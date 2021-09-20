@@ -29,6 +29,21 @@ def boundingbox_in_window(image_size, win_size, win_pos, bb):
     height_new = bot_new - top_new
     return (height_new, width_new, left_new, top_new)
 
+def point_in_window(win_size, win_pos, center):
+    import numpy as np
+
+    window_height, window_width = win_size
+    window_x, window_y = win_pos
+    xc, yc = center
+    
+    new_xc = (xc - window_x)/window_width
+    new_yc = (yc - window_y)/window_height
+
+    if 0 <= new_xc <= 1 and 0 <= new_yc <= 1:
+        return (new_xc, new_yc)
+    else:
+        return None
+
 """
 data[フレーム番号][物体id] = (h, w, x, y) の辞書を返す
 """
@@ -51,9 +66,8 @@ def load_targets():
                 obj_id = int(obj.attrib['id'])
                 for box in obj:
                     h, w, xc, yc = map(float, box.attrib.values())
-                    x, y = xc - w/2, yc - h/2
 
-                    data[number][obj_id] = (h, w, x, y)
+                    data[number][obj_id] = (h, w, xc, yc)
     return data
 
 def load_images(num):
