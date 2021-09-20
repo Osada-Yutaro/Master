@@ -123,7 +123,7 @@ def main():
     log_file_path = os.path.join('/', 'kw_resources', 'Master', 'Log', log_file_name)
     model_file_path = os.path.join('/', 'kw_resources', 'Master', 'Model', now)
     with open(log_file_path, mode='w') as f:
-        message = 'Epoch Train_Loss Train_TP Train_TN Train_FP Train_FN Train_IoU Valid_Loss Valid_TP Valid_TN Valid_FP Valid_FN Valid_IoU\n'
+        message = 'Epoch Train_Loss Valid_Loss\n'
         f.write(message)
     model = detect_model()
 
@@ -132,56 +132,26 @@ def main():
     L = 221 - M
     for epoch in range(N):
         train_loss = 0
-        train_tp = 0
-        train_tn = 0
-        train_fp = 0
-        train_fn = 0
-        train_iou = 0
         for i in range(N):
             X, Y = load_data(i)
             length = len(X)
             BATCH_SIZE = 4
             for batch in range(0, length, BATCH_SIZE):
                 end = min(batch + BATCH_SIZE, length)
-                metrics = model.train_on_batch(x=X[batch:batch+BATCH_SIZE], y={'output':Y[batch:batch+BATCH_SIZE]})
-                train_loss += metrics[0]/length
-                train_tp += metrics[1]/length
-                train_tn += metrics[2]/length
-                train_fp += metrics[3]/length
-                train_fn += metrics[4]/length
+                loss = model.train_on_batch(x=X[batch:batch+BATCH_SIZE], y={'output':Y[batch:batch+BATCH_SIZE]})
+                train_loss += loss/length
 
         valid_loss = 0
-        valid_tp = 0
-        valid_tn = 0
-        valid_fp = 0
-        valid_fn = 0
-        valid_iou = 0
         for i in range(M, 221):
             X, Y = load_data(i)
-            evaluated = model.evaluate(x=X, y={'output':Y}, verbose=0)
-            valid_loss += evaluated[0]
-            valid_tp += evaluated[1]
-            valid_tn += evaluated[2]
-            valid_fp += evaluated[3]
-            valid_fn += evaluated[4]
+            loss = model.evaluate(x=X, y={'output':Y}, verbose=0)
+            valid_loss += loss
         
-        train_iou = train_tp/(train_tp + train_fp + train_tn)
-        valid_iou = valid_tp/(valid_tp + valid_fp + valid_tn)
         with open(log_file_path, mode='a') as f:
             message = join_nums(
                 epoch,
                 train_loss/M,
-                train_tp/M,
-                train_tn/M,
-                train_fp/M,
-                train_fn/M,
-                train_iou,
                 valid_loss/L,
-                valid_tp/L,
-                valid_tn/L,
-                valid_fp/L,
-                valid_fn/L,
-                valid_iou
                 )
             f.write(message)
 
