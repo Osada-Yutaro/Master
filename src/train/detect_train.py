@@ -55,13 +55,13 @@ def load_data(num):
         for y in range(y0, HEIGHT - WIN_SIZE, WIN_SIZE//3):
             cropped_win = image[y:y + WIN_SIZE, x:x + WIN_SIZE]
             cropped_win = cv2.resize(cropped_win, (224, 224))
-            targets = [[0 for _ in range(3)] for _ in range(5)]
-            for item in targets:
+            targets_list = [[0 for _ in range(3)] for _ in range(5)]
+            for item in targets.items():
                 id, bb = item
                 _, _, xc, yc = bb
                 center = (xc, yc)
                 _, new_center = crop(image, center, (x, y), WIN_SIZE)
-                targets.append(new_center)
+                targets_list.append(new_center)
             targets.sort(key=key)
             targets = targets[0:5]
             X.append(cropped_win)
