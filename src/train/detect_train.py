@@ -24,7 +24,7 @@ def get_layer(model, name):
 
 def crop(image, center, position, window_size):
     x, y = position
-    new_center = point_in_window(window_size, position, center)
+    new_center = point_in_window((window_size, window_size), position, center)
     dst = image[y:y + window_size, x:x + window_size]
     X = image_in_frame((window_size, window_size), dst)
     Y = None
