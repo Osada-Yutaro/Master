@@ -62,9 +62,8 @@ def load_data(num):
                 center = (xc, yc)
                 _, new_center = crop(image, center, (x, y), WIN_SIZE)
                 targets_list.append(new_center)
-                print(targets_list)
-            targets.sort(key=key)
-            targets = targets[0:5]
+            targets_list.sort(key=key)
+            targets = targets_list[0:5]
             X.append(cropped_win)
             Y.append(targets)
     return np.array(X), np.array(Y)
