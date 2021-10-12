@@ -63,9 +63,9 @@ def load_data(num):
                 _, new_center = crop(image, center, (x, y), WIN_SIZE)
                 targets_list.append(new_center)
             targets_list.sort(key=key)
-            targets = targets_list[0:5]
+            targets_list = targets_list[0:5]
             X.append(cropped_win)
-            Y.append(targets)
+            Y.append(targets_list)
     return np.array(X), np.array(Y)
 
 def loss_func(targ, pred, C=1.0, LAMBDA=1.0):
