@@ -66,7 +66,7 @@ def load_data(num):
             targets_list = targets_list[0:5]
             X.append(cropped_win)
             Y.append(targets_list)
-    return np.array(X), np.array(Y)
+    return np.array(X, dtype=np.float32), np.array(Y, dtype=np.float32)
 
 def loss_func(targ, pred, C=1.0, LAMBDA=1.0):
     position_target = targ[:, 0:2]
