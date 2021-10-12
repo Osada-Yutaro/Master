@@ -61,8 +61,8 @@ def load_data(num):
                 _, _, xc, yc = bb
                 center = (xc, yc)
                 _, new_center = crop(image, center, (x, y), WIN_SIZE)
+                print(new_center)
                 targets_list.append(new_center)
-            print(targets)
             targets.sort(key=key)
             targets = targets[0:5]
             X.append(cropped_win)
