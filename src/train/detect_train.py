@@ -29,10 +29,10 @@ def crop(image, center, position, window_size):
     X = image_in_frame((window_size, window_size), dst)
     Y = None
     if new_center is None:
-        Y = [0, 0, 0]
+        Y = [0., 0., 0.]
     else:
         xc, yc = new_center
-        Y = [xc, yc, 1]
+        Y = [xc, yc, 1.]
     return X, Y
 
 def key(center):
