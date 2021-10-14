@@ -147,6 +147,8 @@ def main():
             loss = model.evaluate(x=X, y={'output':Y}, verbose=0)
             valid_loss += loss
         
+        print(train_loss, valid_loss)
+        
         with open(log_file_path, mode='a') as f:
             message = join_nums(
                 epoch,
