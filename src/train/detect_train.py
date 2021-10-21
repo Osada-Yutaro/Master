@@ -160,5 +160,22 @@ def main():
     model.save(model_file_path)
     return model
 
+def sample(model):
+    num = 190
+    X, Y = load_data(num)
+    N = len(X)
+    n = 0
+    for i in range(N):
+        predict = model.predict(X[i])
+        x = X[i]
+        y = Y[i]
+        xc, yc, c = predict
+        if .5 < c:
+            img = cv2.circle(x, (xc, yc), 3, (0, 255, 0))
+            path = os.path.join('/', 'kw_resources', 'Master', 'Sample', str(n) + '.png')
+            cv2.imwrite(path, img)
+    return
+
 if __name__ == '__main__':
-    main()
+    model = main()
+    sample(model)
