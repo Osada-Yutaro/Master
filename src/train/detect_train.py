@@ -177,5 +177,5 @@ def sample(model):
     return
 
 if __name__ == '__main__':
-    model = load_model(os.path.join('/', 'kw_resources', 'Master', 'Sample', 'SampleModel'))
+    model = load_model(os.path.join('/', 'kw_resources', 'Master', 'Model', 'SampleModel'))
     sample(model)
