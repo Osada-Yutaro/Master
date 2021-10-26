@@ -1,5 +1,6 @@
 import os
 import datetime
+from tensorflow.keras.models import load_model
 from tensorflow.keras import applications
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Dense, Input, Flatten, BatchNormalization, Conv2D, Reshape
@@ -166,7 +167,7 @@ def sample(model):
     N = len(X)
     n = 0
     for i in range(N):
-        predict = model.predict(X[i])
+        predict = model.predict(X[i])[0]
         x = X[i]
         y = Y[i]
         xc, yc, c = predict
@@ -177,5 +178,5 @@ def sample(model):
     return
 
 if __name__ == '__main__':
-    model = main()
+    model = load_model(os.path.join('/', 'kw_resources', 'Master', 'Model', 'SampleModel'))
     sample(model)
