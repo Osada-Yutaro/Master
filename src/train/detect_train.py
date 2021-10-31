@@ -178,6 +178,6 @@ def sample(model):
 
 if __name__ == '__main__':
     filepath = os.path.join('/', 'kw_resources', 'Master', 'Model', 'SampleModel')
-    custom_objects={'loss_function': loss_func}
+    custom_objects={'loss_func': loss_func}
     model = load_model(filepath=filepath, custom_objects=custom_objects)
     sample(model)
