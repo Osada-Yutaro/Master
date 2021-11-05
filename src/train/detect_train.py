@@ -109,7 +109,7 @@ def detect_model():
 
     model = Model(inputs=vgg16.input, outputs=[x])
     adam = Adam(learning_rate=1e-3, beta_1=0.9, beta_2=0.999)
-    model.compile(loss=loss_func, optimizer=adam)
+    model.compile(loss={'loss_func': loss_func}, optimizer=adam)
     return model
 
 def join_nums(*args):
@@ -147,8 +147,6 @@ def main():
             X, Y = load_data(i)
             loss = model.evaluate(x=X, y={'output':Y}, verbose=0)
             valid_loss += loss
-        
-        print(train_loss, valid_loss)
         
         with open(log_file_path, mode='a') as f:
             message = join_nums(
