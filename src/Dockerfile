@@ -5,4 +5,5 @@ RUN apt-get install -y libgl1-mesa-dev
 RUN python -m pip install --no-cache-dir opencv-python
 RUN git clone https://github.com/Osada-Yutaro/Master
 WORKDIR Master
+RUN git checkout sample
 CMD make detection_train
