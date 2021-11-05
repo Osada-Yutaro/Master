@@ -1,6 +1,7 @@
 import os
 import datetime
 from tensorflow.keras import applications
+from tensorflow.keras.losses import mean_squared_error
 from tensorflow.keras.models import Model, load_model
 from tensorflow.keras.layers import Dense, Input, Flatten, BatchNormalization, Conv2D, Reshape
 from tensorflow.keras.optimizers import SGD, Adam
@@ -178,6 +179,6 @@ def sample(model):
 
 if __name__ == '__main__':
     filepath = os.path.join('/', 'kw_resources', 'Master', 'Model', 'SampleModel')
-    custom_objects={'loss_func': loss_func}
+    custom_objects={'loss_func': mean_squared_error}
     model = load_model(filepath=filepath, custom_objects=custom_objects)
     sample(model)
