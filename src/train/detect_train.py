@@ -165,7 +165,7 @@ def sample(model):
     N = len(X)
     n = 0
     for i in range(N):
-        inp = np.array(X[i])
+        inp = np.array([X[i]])
         predict = model.predict(inp)[0]
         x = X[i]
         y = Y[i]
