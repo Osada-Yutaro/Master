@@ -1,6 +1,7 @@
 import os
 import datetime
 from tensorflow.keras.models import load_model
+from tensorflow.keras.losses import mean_squared_error
 from tensorflow.keras import applications
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Dense, Input, Flatten, BatchNormalization, Conv2D, Reshape
@@ -109,7 +110,7 @@ def detect_model():
 
     model = Model(inputs=vgg16.input, outputs=[x])
     adam = Adam(learning_rate=1e-3, beta_1=0.9, beta_2=0.999)
-    model.compile(loss=loss_func, optimizer=adam)
+    model.compile(loss=mean_squared_error, optimizer=adam)
     return model
 
 def join_nums(*args):
