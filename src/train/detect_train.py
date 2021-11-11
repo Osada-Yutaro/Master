@@ -169,11 +169,13 @@ def sample(model):
         predict = model.predict(inp)[0]
         x = X[i]
         y = Y[i]
-        xc, yc, c = predict
-        if .5 < c:
-            img = cv2.circle(x, (xc, yc), 3, (0, 255, 0))
-            path = os.path.join('/', 'kw_resources', 'Master', 'Sample', str(n) + '.png')
-            cv2.imwrite(path, img)
+        results = predict
+        for j in range(5):
+            xc, yc, c = results[j]
+            if .5 < c:
+                img = cv2.circle(x, (xc, yc), 3, (0, 255, 0))
+                path = os.path.join('/', 'kw_resources', 'Master', 'Sample', str(n) + '.png')
+                cv2.imwrite(path, img)
     return
 
 if __name__ == '__main__':
