@@ -1,8 +1,9 @@
 import os
 import datetime
+import tensorflow
+from tensorflow.keras.models import load_model
 from tensorflow.keras import applications
-from tensorflow.keras.losses import mean_squared_error
-from tensorflow.keras.models import Model, load_model
+from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Dense, Input, Flatten, BatchNormalization, Conv2D, Reshape
 from tensorflow.keras.optimizers import SGD, Adam
 from tensorflow.keras.callbacks import LearningRateScheduler
@@ -109,7 +110,7 @@ def detect_model():
 
     model = Model(inputs=vgg16.input, outputs=[x])
     adam = Adam(learning_rate=1e-3, beta_1=0.9, beta_2=0.999)
-    model.compile(loss={'loss_func': loss_func}, optimizer=adam)
+    model.compile(loss=loss_func, optimizer=adam)
     return model
 
 def join_nums(*args):
@@ -148,8 +149,6 @@ def main():
             loss = model.evaluate(x=X, y={'output':Y}, verbose=0)
             valid_loss += loss
         
-        print(train_loss, valid_loss)
-        
         with open(log_file_path, mode='a') as f:
             message = join_nums(
                 epoch,
@@ -167,18 +166,22 @@ def sample(model):
     N = len(X)
     n = 0
     for i in range(N):
-        predict = model.predict(X[i])[0]
+        inp = np.array([X[i]])
+        predict = model.predict(inp)[0]
         x = X[i]
         y = Y[i]
-        xc, yc, c = predict
-        if .5 < c:
-            img = cv2.circle(x, (xc, yc), 3, (0, 255, 0))
-            path = os.path.join('/', 'kw_resources', 'Master', 'Sample', str(n) + '.png')
-            cv2.imwrite(path, img)
+        results = predict
+        for j in range(5):
+            xc, yc, c = results[j]
+            if .5 < c:
+                img = cv2.circle(x, (xc, yc), 3, (0, 255, 0))
+                path = os.path.join('/', 'kw_resources', 'Master', 'Sample', str(n) + '.png')
+                cv2.imwrite(path, img)
     return
 
 if __name__ == '__main__':
     filepath = os.path.join('/', 'kw_resources', 'Master', 'Model', 'SampleModel')
-    custom_objects={'loss_func': mean_squared_error}
+    import tensorflow.keras.models as models
+    custom_objects={'loss_func': loss_func}
     model = load_model(filepath=filepath, custom_objects=custom_objects)
     sample(model)
