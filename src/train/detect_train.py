@@ -181,7 +181,8 @@ def sample(model):
 
 if __name__ == '__main__':
     filepath = os.path.join('/', 'kw_resources', 'Master', 'Model', 'SampleModel')
-    import tensorflow.keras.models as models
-    custom_objects={'loss_func': loss_func}
+    import tensorflow.keras.losses as losses
+    losses.loss_func = loss_func
+    custom_objects={'loss_func': losses.loss_func}
     model = load_model(filepath=filepath, custom_objects=custom_objects)
     sample(model)
