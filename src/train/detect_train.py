@@ -13,7 +13,8 @@ from tensorflow.python import training
 from preprocess import load_images, load_targets, boundingbox_in_window, image_in_frame, point_in_window
 from tensorflow.keras import backend as K
 import cv2
-from metrics import TP, TN, FP, FN, IoU
+
+DATE = ''
 
 """
     modelの名前が一致する層を返す
@@ -120,10 +121,10 @@ def join_nums(*args):
     return s + '\n'
 
 def main():
-    now = datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S')
-    log_file_name = now + '.txt'
+    DATE = datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S')
+    log_file_name = DATE + '.txt'
     log_file_path = os.path.join('/', 'kw_resources', 'Master', 'Log', log_file_name)
-    model_file_path = os.path.join('/', 'kw_resources', 'Master', 'Model', now)
+    model_file_path = os.path.join('/', 'kw_resources', 'Master', 'Model', DATE)
     with open(log_file_path, mode='w') as f:
         message = 'Epoch Train_Loss Valid_Loss\n'
         f.write(message)
@@ -180,9 +181,7 @@ def sample(model):
     return
 
 if __name__ == '__main__':
-    filepath = os.path.join('/', 'kw_resources', 'Master', 'Model', 'SampleModel')
-    import tensorflow.keras.losses as losses
-    losses.loss_func = loss_func
-    custom_objects={'loss_func': loss_func}
-    model = load_model(filepath=filepath, custom_objects=custom_objects)
+    main()
+    filepath = os.path.join('/', 'kw_resources', 'Master', 'Model', DATE)
+    model = load_model(filepath=filepath, custom_objects={'loss_func': loss_func})
     sample(model)
