@@ -183,5 +183,6 @@ def sample(model):
 if __name__ == '__main__':
     main()
     filepath = os.path.join('/', 'kw_resources', 'Master', 'Model', DATE)
+    print(os.listdir(os.path.join('/', 'kw_resources', 'Master', 'Model')))
     model = load_model(filepath=filepath, custom_objects={'loss_func': loss_func})
     sample(model)
