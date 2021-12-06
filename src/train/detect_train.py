@@ -113,7 +113,7 @@ def detect_model():
 
     model = Model(inputs=vgg16.input, outputs=[x])
     adam = Adam(learning_rate=1e-3, beta_1=0.9, beta_2=0.999)
-    model.compile(loss=loss_func, optimizer=adam)
+    model.compile(loss='mean_squared_error', optimizer=adam)
     return model
 
 def join_nums(*args):
@@ -185,6 +185,5 @@ def sample(model):
 if __name__ == '__main__':
     main()
     filepath = os.path.join('/', 'kw_resources', 'Master', 'Model', 'AAA')
-    print(os.listdir(os.path.join('/', 'kw_resources', 'Master', 'Model')))
-    model = load_model(filepath=filepath, custom_objects={'loss_func': loss_func})
+    model = load_model(filepath=filepath)
     sample(model)
