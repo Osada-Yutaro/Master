@@ -124,7 +124,7 @@ def main():
     DATE = datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S')
     log_file_name = DATE + '.txt'
     log_file_path = os.path.join('/', 'kw_resources', 'Master', 'Log', log_file_name)
-    model_file_path = os.path.join('/', 'kw_resources', 'Master', 'Model', DATE)
+    model_file_path = os.path.join('/', 'kw_resources', 'Master', 'Model', 'AAA')
     with open(log_file_path, mode='w') as f:
         message = 'Epoch Train_Loss Valid_Loss\n'
         f.write(message)
@@ -182,7 +182,7 @@ def sample(model):
 
 if __name__ == '__main__':
     main()
-    filepath = os.path.join('/', 'kw_resources', 'Master', 'Model', DATE)
+    filepath = os.path.join('/', 'kw_resources', 'Master', 'Model', 'AAA')
     print(os.listdir(os.path.join('/', 'kw_resources', 'Master', 'Model')))
     model = load_model(filepath=filepath, custom_objects={'loss_func': loss_func})
     sample(model)
