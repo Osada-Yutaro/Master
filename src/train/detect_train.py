@@ -184,5 +184,5 @@ if __name__ == '__main__':
     main()
     filepath = os.path.join('/', 'kw_resources', 'Master', 'Model', 'AAA')
     print(os.listdir(os.path.join('/', 'kw_resources', 'Master', 'Model')))
-    model = load_model(filepath=filepath, custom_objects={'loss_func': loss_func})
+    model = load_model(filepath=filepath, custom_objects={'loss': loss_func})
     sample(model)
