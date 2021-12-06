@@ -71,7 +71,9 @@ def load_data(num):
             Y.append(targets_list)
     return np.array(X, dtype=np.float32), np.array(Y, dtype=np.float32)
 
-def loss_func(targ, pred, C=1.0, LAMBDA=1.0):
+def loss_func(targ, pred):
+    C=1.0
+    LAMBDA=1.0
     position_target = targ[:, 0:2]
     position_predic = pred[:, 0:2]
     conf_target = targ[:, 2]
@@ -184,5 +186,5 @@ if __name__ == '__main__':
     main()
     filepath = os.path.join('/', 'kw_resources', 'Master', 'Model', 'AAA')
     print(os.listdir(os.path.join('/', 'kw_resources', 'Master', 'Model')))
-    model = load_model(filepath=filepath, custom_objects={'loss': loss_func})
+    model = load_model(filepath=filepath, custom_objects={'loss_func': loss_func})
     sample(model)
