@@ -177,6 +177,9 @@ def sample(model):
         for j in range(5):
             xc, yc, c = results[j]
             if .5 < c:
+                xci = int(xc*224)
+                yci = int(yc*224)
+                src = np.array(x*255, dtype=np.int32)
                 img = cv2.circle(x, (xc, yc), 3, (0, 255, 0))
                 path = os.path.join('/', 'kw_resources', 'Master', 'Sample', str(n) + '.png')
                 cv2.imwrite(path, img)
