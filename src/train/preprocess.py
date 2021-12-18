@@ -48,39 +48,44 @@ def point_in_window(win_size, win_pos, center):
 data[フレーム番号][物体id] = (h, w, x, y) の辞書を返す
 """
 def load_targets():
-    import xml.etree.ElementTree as ET
     import os
-    PETS09 = os.path.join('/kw_resources', 'Crowd_PETS09')
+    import json
 
-    xmlfile = os.path.join(PETS09, 'PETS2009-S1L1-1.xml')
-    
-    tree = ET.parse(xmlfile)
-    root = tree.getroot()
+    FPS = 30
+
+    targets_dir = os.path.join('/kw_resources', 'Targets')
+    ls = os.listdir(targets_dir)
+    json_file_list = [f for f in ls if '.json' in f]
 
     data = {}
-    for number in root:
-        for objectlist in number:
-            number = int(number.attrib['number'])
-            data[number] = {}
-            for obj in objectlist:
-                obj_id = int(obj.attrib['id'])
-                for box in obj:
-                    h, w, xc, yc = map(float, box.attrib.values())
 
-                    data[number][obj_id] = (h, w, xc, yc)
+    for json_file in json_file_list:
+        json_open = open(json_file, 'r')
+        json_load = json.load(json_open)
+        for region in json_file['regions']:
+            left = json_load['boundingbox']['left']
+            top = json_load['boundingbox']['top']
+            width = json_load['boundingbox']['width']
+            height = json_load['boundingbox']['height']
+            xc = left + width/2
+            yc = top + height/2
+
+            asset_name = json_load['asset']['name']
+            asset_name.split('#')
+            mov = asset_name[0]
+            time = float(asset_name[1])
+
+            frame = int(FPS*time)
+            id = int(json_load['tags'][0])
+            data[frame][id] = (xc, yc)
     return data
 
 def load_images(num):
     import os
     import cv2
     import numpy as np
-    PETS09 = os.path.join('/kw_resources', 'Crowd_PETS09')
-    S1 = 'S1'
-    L1 = 'L1'
-    Time_13_57 = 'Time_13-57'
-    View_001 = 'View_001'
-    view = os.path.join(PETS09, S1, L1, Time_13_57, View_001)
-    N = 221
+    N = 5820
+    view = os.path.join('/kw_resources', 'Resources', 'Frames')
 
     filename = 'frame_' + str(num).zfill(4) + '.jpg'
     path = os.path.join(view, filename)
