@@ -62,11 +62,11 @@ def load_targets():
     for json_file in json_file_list:
         json_open = open(json_file, 'r')
         json_load = json.load(json_open)
-        for region in json_file['regions']:
-            left = json_load['boundingbox']['left']
-            top = json_load['boundingbox']['top']
-            width = json_load['boundingbox']['width']
-            height = json_load['boundingbox']['height']
+        for region in json_load['regions']:
+            left = region['boundingbox']['left']
+            top = region['boundingbox']['top']
+            width = region['boundingbox']['width']
+            height = region['boundingbox']['height']
             xc = left + width/2
             yc = top + height/2
 

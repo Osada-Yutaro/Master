@@ -13,7 +13,6 @@ from tensorflow.python import training
 from preprocess import load_images, load_targets, boundingbox_in_window, image_in_frame, point_in_window
 from tensorflow.keras import backend as K
 import cv2
-from metrics import TP, TN, FP, FN, IoU
 
 """
     modelの名前が一致する層を返す
