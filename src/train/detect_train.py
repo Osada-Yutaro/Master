@@ -89,9 +89,9 @@ def detect_model():
     for layer in vgg16.layers:
         layer.trainable = False
 
-    #hidden_1 = get_layer(vgg16, 'block1_conv2').output
-    #hidden_2 = get_layer(vgg16, 'block2_conv2').output
-    #hidden_3 = get_layer(vgg16, 'block3_conv3').output
+    hidden_1 = get_layer(vgg16, 'block1_conv2').output
+    hidden_2 = get_layer(vgg16, 'block2_conv2').output
+    hidden_3 = get_layer(vgg16, 'block3_conv3').output
 
     x = vgg16.output
     x = Conv2D(filters=256, kernel_size=(1, 1), strides=(1, 1), padding='same')(x)
@@ -108,7 +108,7 @@ def detect_model():
     x = Dense(15)(x)
     x = Reshape((5, 3), name='output')(x)
 
-    model = Model(inputs=vgg16.input, outputs=[x])
+    model = Model(inputs=vgg16.input, outputs=[x, hidden_1, hidden_2, hidden_3])
     adam = Adam(learning_rate=1e-3, beta_1=0.9, beta_2=0.999)
     model.compile(loss=mean_squared_error, optimizer=adam)
     return model
