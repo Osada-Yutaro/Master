@@ -114,7 +114,7 @@ def main():
     now = datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S')
     log_file_name = now + '.txt'
     log_file_path = os.path.join('/', 'kw_resources', 'Master', 'Log', 'RE_ID', log_file_name)
-    model_file_path = os.path.join('/', 'kw_resources', 'Master', 'RE_ID_Model', now)
+    model_file_path = os.path.join('/', 'kw_resources', 'Master', 'Model', 'RE_ID', now)
     with open(log_file_path, mode='w') as f:
         message = 'Epoch Train_Loss Valid_Loss\n'
         f.write(message)
