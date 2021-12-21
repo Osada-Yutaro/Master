@@ -53,7 +53,7 @@ def load_targets():
 
     FPS = 30
 
-    targets_dir = os.path.join('/kw_resources', 'Targets')
+    targets_dir = os.path.join('/kw_resources', 'Master', 'Targets')
     ls = os.listdir(targets_dir)
     json_file_list = [f for f in ls if '.json' in f]
 
@@ -85,7 +85,7 @@ def load_images(num):
     import cv2
     import numpy as np
     N = 5820
-    view = os.path.join('/kw_resources', 'Resources', 'Frames')
+    view = os.path.join('/kw_resources', 'Master', 'Frames')
 
     filename = 'frame_' + str(num).zfill(4) + '.jpg'
     path = os.path.join(view, filename)
