@@ -192,3 +192,6 @@ def main():
     re_model.save(model_file_path)
     return re_model
 
+if __name__ == '__main__':
+    main()
+
