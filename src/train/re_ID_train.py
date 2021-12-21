@@ -81,7 +81,7 @@ def featuring_model():
     z = Dense(256, activation='relu')(z)
 
     combined = Concatenate()([x, y, z])
-    combined = Flatten(combined)
+    combined = Flatten()(combined)
     output = Dense(1024, activation='relu')(combined)
 
     model = Model(inputs=[input1, input2, input3], outputs=output)
@@ -101,7 +101,7 @@ def reID_model():
     feature_2 = feature_model([y1, y2, y3])
 
     combined = Concatenate()([feature_1, feature_2])
-    combined = Flatten(combined)
+    combined = Flatten()(combined)
     x = Dense(512, activation='relu')(combined)
     output = Dense(1)(x)
     model = Model(inputs=[x1, x2, x3, y1, y2, y3], outputs=output)
