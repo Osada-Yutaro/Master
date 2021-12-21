@@ -81,7 +81,6 @@ def featuring_model():
     z = Dense(256, activation='relu')(z)
 
     combined = Concatenate([x, y, z])
-    combined = Flatten(combined)
     output = Dense(1024, activation='relu')(combined)
 
 
