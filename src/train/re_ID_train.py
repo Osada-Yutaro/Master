@@ -65,7 +65,6 @@ def featuring_model():
     x = Conv2D(filters=128, kernel_size=1, strides=1, padding='same')(x)
     x = Flatten()(x)
     x = Dense(128, activation='relu')(x)
-    x = Model(inputs=input1, outputs=x)
 
     y = input2
     y = Conv2D(filters=128, kernel_size=3, strides=1, padding='same')(y)
@@ -73,7 +72,6 @@ def featuring_model():
     y = Conv2D(filters=128, kernel_size=1, strides=1, padding='same')(y)
     y = Flatten()(y)
     y = Dense(256, activation='relu')(y)
-    y = Model(inputs=input2, outputs=y)
 
     z = input3
     z = Conv2D(filters=256, kernel_size=3, strides=1, padding='same')(z)
@@ -81,9 +79,8 @@ def featuring_model():
     z = Conv2D(filters=128, kernel_size=1, strides=1, padding='same')(z)
     z = Flatten()(z)
     z = Dense(256, activation='relu')(z)
-    z = Model(inputs=input3, outputs=z)
 
-    combined = Concatenate([x.output, y.output, z.output])
+    combined = Concatenate([x, y, z])
     combined = Flatten(combined)
     output = Dense(1024, activation='relu')(combined)
 
