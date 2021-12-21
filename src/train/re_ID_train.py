@@ -41,7 +41,7 @@ def load_data(num):
 
     HEIGHT, WIDTH, _ = image.shape
     WIN_SIZE = 192
-    
+
     xs = [[] for _ in range(5)]
 
     for target in targets:
@@ -146,6 +146,7 @@ def main():
                         target = 1 if k == j else 0.
                     
                         train_loss += re_model.train_on_batch(x=[x1, x2, x3, y1, y2, y3], y=target)
+                        print(epoch, i, j, k, train_loss)
                         train_count += 1.
 
             for j in range(TAGS):
