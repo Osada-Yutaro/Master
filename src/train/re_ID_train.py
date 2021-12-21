@@ -122,7 +122,7 @@ def main():
     det_model = detect_model()
 
     M = 3000
-    N = 100
+    N = 50
     L = 5820
     TAGS = 5
     for epoch in range(N):
