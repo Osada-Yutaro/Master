@@ -105,7 +105,7 @@ def reID_model():
     x = Dense(512, activation='relu')(combined)
     output = Dense(1)(x)
     model = Model(inputs=[x1, x2, x3, y1, y2, y3], outputs=output)
-    model.compile(loss='squared_error', optimizer='sgd')
+    model.compile(loss='mean_squared_error', optimizer='sgd')
     return model
 
 def main():
