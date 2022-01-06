@@ -141,7 +141,7 @@ def main():
                         _, x1, x2, x3 = det_model.predict(x)
                         _, y1, y2, y3 = det_model.predict(Xs[j])
 
-                        target = 1 if k == j else 0.
+                        target = 1. if k == j else 0.
                     
                         train_loss += re_model.train_on_batch(x=[x1, x2, x3, y1, y2, y3], y=target)
                         print(epoch, i, j, k, train_loss)

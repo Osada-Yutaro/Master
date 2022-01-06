@@ -60,6 +60,7 @@ def load_targets():
     data = {}
 
     for json_file in json_file_list:
+        os.path.join(targets_dir, json_file)
         json_open = open(json_file, 'r')
         json_load = json.load(json_open)
         for region in json_load['regions']:
