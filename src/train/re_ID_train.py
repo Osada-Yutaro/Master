@@ -62,27 +62,27 @@ def featuring_model():
     x = input1
     x = Conv2D(filters=64, kernel_size=3, strides=1, padding='same')(x)
     x = MaxPooling2D(pool_size=2, padding='same')(x)
-    x = Conv2D(filters=128, kernel_size=1, strides=1, padding='same')(x)
+    x = Conv2D(filters=32, kernel_size=1, strides=1, padding='same')(x)
     x = Flatten()(x)
-    x = Dense(128, activation='relu')(x)
+    x = Dense(256, activation='relu')(x)
 
     y = input2
     y = Conv2D(filters=128, kernel_size=3, strides=1, padding='same')(y)
     y = MaxPooling2D(pool_size=2, padding='same')(y)
-    y = Conv2D(filters=128, kernel_size=1, strides=1, padding='same')(y)
+    y = Conv2D(filters=64, kernel_size=1, strides=1, padding='same')(y)
     y = Flatten()(y)
     y = Dense(256, activation='relu')(y)
 
     z = input3
     z = Conv2D(filters=256, kernel_size=3, strides=1, padding='same')(z)
     z = MaxPooling2D(pool_size=2, padding='same')(z)
-    z = Conv2D(filters=128, kernel_size=1, strides=1, padding='same')(z)
+    z = Conv2D(filters=64, kernel_size=1, strides=1, padding='same')(z)
     z = Flatten()(z)
     z = Dense(256, activation='relu')(z)
 
     combined = Concatenate()([x, y, z])
     combined = Flatten()(combined)
-    output = Dense(1024, activation='relu')(combined)
+    output = Dense(512, activation='relu')(combined)
 
     model = Model(inputs=[input1, input2, input3], outputs=output)
     return model
@@ -105,7 +105,7 @@ def reID_model():
     x = Dense(512, activation='relu')(combined)
     output = Dense(1)(x)
     model = Model(inputs=[x1, x2, x3, y1, y2, y3], outputs=output)
-    model.compile(loss='mean_squared_error', optimizer='sgd')
+    model.compile(loss='mean_squared_error', optimizer='adam')
     return model
 
 def main():
