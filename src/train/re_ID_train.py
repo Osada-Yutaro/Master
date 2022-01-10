@@ -43,6 +43,7 @@ def load_data(num):
     WIN_SIZE = 192
 
     xs = [[] for _ in range(5)]
+    ys = [[] for _ in range(5)]
 
     for target in targets:
         for item in target:
@@ -52,7 +53,8 @@ def load_data(num):
             x0 = int(xc - 112)
             src = image[yc:yc + 224, xc:xc + 224]
             xs[id].append(src)
-    return xs
+            ys[id].append((xc, yc))
+    return xs, ys
 
 def featuring_model():
     input1 = Input(shape=(16, 16, 64))
@@ -108,6 +110,13 @@ def reID_model():
     model.compile(loss='mean_squared_error', optimizer='adam')
     return model
 
+def get_feature(center, layer_2, layer_5, layer_9):
+    xc, yc = center
+    f1 = layer_2[int(yc - 8):int(yc - 8) + 16, int(xc - 8):int(xc - 8) + 16, :]
+    f2 = layer_5[int(yc/2 - 4):int(yc/2 - 4) + 8, int(xc/2 - 4):int(xc/2 - 4) + 8, :]
+    f3 = layer_9[int(yc/4 - 2):int(yc/4 - 2) + 4, int(xc/4 - 2):int(xc/4 - 2) + 4, :]
+    return f1, f2, f3
+
 def main():
     now = datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S')
     log_file_name = now + '.txt'
@@ -128,27 +137,34 @@ def main():
         train_history = []
         train_count = 1e-9
         for i in range(M):
-            Xs = load_data(i)
+            Xs, Ys = load_data(i)
             EMPTY = [[] for _ in range(5)]
             if EMPTY == Xs:
                 continue
+
+            f1 = None
+            f2 = None
+            f3 = None
 
             for j in range(TAGS):
                 if Xs[j] == []:
                     continue
                 for k in range(TAGS):
                     for x in train_history[j]:
-                        _, x1, x2, x3 = det_model.predict(x)
                         _, y1, y2, y3 = det_model.predict(Xs[j])
 
+                        x1, x2, x3 = x
+
                         target = 1. if k == j else 0.
+                        
+                        f1, f2, f3 = get_feature(Ys[j], y1, y2, y3)
                     
-                        train_loss += re_model.train_on_batch(x=[x1, x2, x3, y1, y2, y3], y=target)
+                        train_loss += re_model.train_on_batch(x=[x1, x2, x3, f1, f2, f3], y=target)
                         print(epoch, i, j, k, train_loss)
                         train_count += 1.
 
             for j in range(TAGS):
-                train_history[j].append(Xs[j])
+                train_history[j].append((f1, f2, f3))
                 if len(train_history[j] > 40):
                     train_history[j].pop(0)
 
@@ -157,7 +173,7 @@ def main():
         valid_count = 1e-9
 
         for i in range(M, L):
-            Xs = load_data(i)
+            Xs, Ys = load_data(i)
             EMPTY = [[] for _ in range(5)]
             if EMPTY == Xs:
                 continue
@@ -167,16 +183,19 @@ def main():
                     continue
                 for k in range(TAGS):
                     for x in valid_history[j]:
-                        _, x1, x2, x3 = det_model.predict(x)
+
+                        x1, x2, x3 = x
+
                         _, y1, y2, y3 = det_model.predict(Xs[j])
+                        f1, f2, f3 = get_feature(Ys[j], y1, y2, y3)
 
                         target = 1 if k == j else 0.
                     
-                        valid_loss += re_model.train_on_batch(x=[x1, x2, x3, y1, y2, y3], y=target)
+                        valid_loss += re_model.evaluate(x=[x1, x2, x3, y1, y2, y3], y=target)
                         valid_count += 1.
 
             for j in range(TAGS):
-                valid_history[j].append(Xs[j])
+                valid_history[j].append((f1, f2, f3))
                 if len(valid_history[j] > 40):
                     valid_history[j].pop(0)
         
