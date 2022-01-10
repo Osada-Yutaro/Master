@@ -72,10 +72,9 @@ def load_targets():
             yc = top + height/2
 
             asset_name = json_load['asset']['name']
-            asset_name.split('#')
-            mov = asset_name[0]
-            print(asset_name)
-            time = float(asset_name[1])
+            sp = asset_name.split('#')
+            mov = sp[0]
+            time = float(sp[1])
 
             frame = int(FPS*time)
             id = int(json_load['tags'][0])
