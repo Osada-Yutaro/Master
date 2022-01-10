@@ -100,7 +100,7 @@ def detect_model():
     x = Flatten()(x)
     x = Dense(4096, activation='relu')(x)
     x = BatchNormalization()(x)
-    x = Reshape((3), name='output')(x)
+    x = Dense(3, name='output')(x)
 
     model = Model(inputs=vgg16.input, outputs=[x, hidden_1, hidden_2, hidden_3])
     adam = Adam(learning_rate=1e-3, beta_1=0.9, beta_2=0.999)
