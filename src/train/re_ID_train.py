@@ -186,7 +186,7 @@ def main():
 
                         x1, x2, x3 = x
 
-                        _, y1, y2, y3 = det_model.predict(Xs[j])
+                        y1, y2, y3 = det_model.predict(Xs[j])
                         f1, f2, f3 = get_feature(Ys[j], y1, y2, y3)
 
                         target = 1 if k == j else 0.
