@@ -74,7 +74,7 @@ def load_targets():
             asset_name = json_load['asset']['name']
             asset_name.split('#')
             mov = asset_name[0]
-            print(asset_name[1])
+            print(asset_name)
             time = float(asset_name[1])
 
             frame = int(FPS*time)
