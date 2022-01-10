@@ -8,6 +8,7 @@ from tensorflow.keras.layers import Dense, Input, Flatten, BatchNormalization, C
 from tensorflow.keras.optimizers import SGD, Adam
 from tensorflow.keras.callbacks import LearningRateScheduler
 from tensorflow.keras.optimizers.schedules import ExponentialDecay
+from tensorflow.keras import engine
 import numpy as np
 from tensorflow.python import training
 from preprocess import load_images, load_targets, boundingbox_in_window, image_in_frame, point_in_window
@@ -100,10 +101,13 @@ def detect_model():
     x = BatchNormalization()(x)
     x = Dense(3, name='output')(x)
 
-    model = Model(inputs=vgg16.input, outputs=[x, hidden_1, hidden_2, hidden_3])
+    model = Model(inputs=vgg16.input, outputs=x)
     adam = Adam(learning_rate=1e-3, beta_1=0.9, beta_2=0.999)
-    model.compile(loss={'output': mean_squared_error}, optimizer=adam)
-    return model
+    model.compile(loss=mean_squared_error, optimizer=adam)
+
+    feature = Model(inputs=vgg16.input,outputs=[hidden_1, hidden_2, hidden_3])
+
+    return model, feature
 
 def join_nums(*args):
     s = ''
@@ -119,7 +123,7 @@ def main():
     with open(log_file_path, mode='w') as f:
         message = 'Epoch Train_Loss Valid_Loss\n'
         f.write(message)
-    model = detect_model()
+    model, _ = detect_model()
 
     M = 180
     N = 100

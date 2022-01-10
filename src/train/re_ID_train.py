@@ -126,7 +126,7 @@ def main():
         message = 'Epoch Train_Loss Valid_Loss\n'
         f.write(message)
     re_model = reID_model()
-    det_model = detect_model()
+    _, det_model = detect_model()
 
     M = 3000
     N = 50
@@ -151,7 +151,7 @@ def main():
                     continue
                 for k in range(TAGS):
                     for x in train_history[j]:
-                        _, y1, y2, y3 = det_model.predict(Xs[j])
+                        y1, y2, y3 = det_model.predict(Xs[j])
 
                         x1, x2, x3 = x
 
