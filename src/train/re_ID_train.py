@@ -46,14 +46,13 @@ def load_data(num):
     ys = [[] for _ in range(5)]
 
     for target in targets:
-        for item in target:
-            id, center = item
-            xc, yc = center
-            y0 = int(yc - 112)
-            x0 = int(xc - 112)
-            src = image[yc:yc + 224, xc:xc + 224]
-            xs[id].append(src)
-            ys[id].append((xc, yc))
+        id, center = target
+        xc, yc = center
+        y0 = int(yc - 112)
+        x0 = int(xc - 112)
+        src = image[yc:yc + 224, xc:xc + 224]
+        xs[id].append(src)
+        ys[id].append((xc, yc))
     return xs, ys
 
 def featuring_model():
