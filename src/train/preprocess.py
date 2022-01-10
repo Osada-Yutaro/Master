@@ -72,7 +72,7 @@ def load_targets():
             yc = top + height/2
 
             asset_name = json_load['asset']['name']
-            sp = asset_name.split('#')
+            sp = asset_name.split('#t=')
             mov = sp[0]
             time = float(sp[1])
 
