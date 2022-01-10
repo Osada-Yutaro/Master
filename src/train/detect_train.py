@@ -102,7 +102,7 @@ def detect_model():
 
     model = Model(inputs=vgg16.input, outputs=[x, hidden_1, hidden_2, hidden_3])
     adam = Adam(learning_rate=1e-3, beta_1=0.9, beta_2=0.999)
-    model.compile(loss=mean_squared_error, optimizer=adam)
+    model.compile(loss={'output': mean_squared_error}, optimizer=adam)
     return model
 
 def join_nums(*args):
