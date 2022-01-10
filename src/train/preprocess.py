@@ -45,7 +45,7 @@ def point_in_window(win_size, win_pos, center):
         return None
 
 """
-data[フレーム番号][物体id] = (h, w, x, y) の辞書を返す
+data[フレーム番号][物体id] = (xc, yc) の辞書を返す
 """
 def load_targets():
     import os
@@ -57,7 +57,7 @@ def load_targets():
     ls = os.listdir(targets_dir)
     json_file_list = [f for f in ls if '.json' in f]
 
-    data = [[{} for _ in range(5)] for _ in range(6000)]
+    data = [{} for _ in range(6000)]
 
     for json_file in json_file_list:
         path = os.path.join(targets_dir, json_file)
