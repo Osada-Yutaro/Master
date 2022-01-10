@@ -57,7 +57,7 @@ def load_targets():
     ls = os.listdir(targets_dir)
     json_file_list = [f for f in ls if '.json' in f]
 
-    data = {}
+    data = [[{} for _ in range(5)] for _ in range(6000)]
 
     for json_file in json_file_list:
         path = os.path.join(targets_dir, json_file)
