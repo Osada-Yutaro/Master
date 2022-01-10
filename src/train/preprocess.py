@@ -64,10 +64,10 @@ def load_targets():
         json_open = open(path, 'r')
         json_load = json.load(json_open)
         for region in json_load['regions']:
-            left = region['boundingbox']['left']
-            top = region['boundingbox']['top']
-            width = region['boundingbox']['width']
-            height = region['boundingbox']['height']
+            left = region['boundingBox']['left']
+            top = region['boundingBox']['top']
+            width = region['boundingBox']['width']
+            height = region['boundingBox']['height']
             xc = left + width/2
             yc = top + height/2
 
