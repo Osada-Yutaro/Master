@@ -8,7 +8,6 @@ from tensorflow.keras.layers import Dense, Input, Flatten, BatchNormalization, C
 from tensorflow.keras.optimizers import SGD, Adam
 from tensorflow.keras.callbacks import LearningRateScheduler
 from tensorflow.keras.optimizers.schedules import ExponentialDecay
-from tensorflow.keras import engine
 import numpy as np
 from tensorflow.python import training
 from preprocess import load_images, load_targets, boundingbox_in_window, image_in_frame, point_in_window
