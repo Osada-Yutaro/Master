@@ -77,10 +77,7 @@ def load_targets():
             time = float(sp[1])
 
             frame = int(FPS*time)
-            print(json_load)
-            print(json_load['regions'])
-            print(json_load['regions']['tags'])
-            id = int(json_load['regions']['tags'][0])
+            id = int(region['tags'][0])
             data[frame][id] = (xc, yc)
     return data
 
