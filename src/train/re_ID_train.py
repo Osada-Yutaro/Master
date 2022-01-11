@@ -53,7 +53,7 @@ def load_data(num):
         xc, yc = center
         y0 = int(yc - 112)
         x0 = int(xc - 112)
-        src = image[yc:yc + 224, xc:xc + 224]
+        src = image[y0:y0 + 224, x0:x0 + 224]
         xs[id].append(src)
         ys[id].append((xc, yc))
     return xs, ys
