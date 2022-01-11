@@ -149,9 +149,10 @@ def main():
             f3 = None
 
             for j in range(TAGS):
+                length = len(train_history)
                 if Xs[j] == []:
                     continue
-                for k in range(TAGS):
+                for k in range(min(length, TAGS)):
                     for x in train_history[j]:
                         y1, y2, y3 = det_model.predict(Xs[j])
 
