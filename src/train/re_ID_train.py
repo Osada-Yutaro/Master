@@ -136,7 +136,7 @@ def main():
     TAGS = 5
     for epoch in range(N):
         train_loss = 1e-9
-        train_history = []
+        train_history = [[] for _ in range(TAGS)]
         train_count = 1e-9
         for i in range(M):
             Xs, Ys = load_data(i)
@@ -149,10 +149,9 @@ def main():
             f3 = None
 
             for j in range(TAGS):
-                length = len(train_history)
                 if Xs[j] == []:
                     continue
-                for k in range(min(length, TAGS)):
+                for k in range(TAGS):
                     for x in train_history[j]:
                         y1, y2, y3 = det_model.predict(Xs[j])
 
