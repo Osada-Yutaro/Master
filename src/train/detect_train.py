@@ -176,4 +176,4 @@ def sample(model):
 
 if __name__ == '__main__':
     model = main()
-    sample(model)
+    #sample(model)
