@@ -47,7 +47,7 @@ def load_data(num):
 
     print(targets)
 
-    for target in targets:
+    for target in targets.items():
         print(target)
         id, center = target
         xc, yc = center
