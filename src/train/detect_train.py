@@ -105,7 +105,6 @@ def detect_model():
     model.compile(loss=mean_squared_error, optimizer=adam)
 
     feature = Model(inputs=vgg16.input,outputs=[hidden_1, hidden_2, hidden_3])
-    feature.compile()
 
     return model, feature
 
