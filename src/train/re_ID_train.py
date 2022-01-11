@@ -106,7 +106,7 @@ def reID_model():
     x = Dense(512, activation='relu')(combined)
     output = Dense(1)(x)
     model = Model(inputs=[x1, x2, x3, y1, y2, y3], outputs=output)
-    model.compile(loss='mean_squared_error', optimizer='adam', metrics=['mse', 'acc'])
+    model.compile(loss='mean_squared_error', optimizer='adam', metrics='mse')
     return model
 
 def get_feature(center, layer_2, layer_5, layer_9):
@@ -157,7 +157,7 @@ def main():
                         target = 1. if k == j else 0.
                         
                         f1, f2, f3 = get_feature(Ys[j], y1, y2, y3)
-                    
+
                         train_loss += re_model.train_on_batch(x=[x1, x2, x3, f1, f2, f3], y=target)
                         print(epoch, i, j, k, train_loss)
                         train_count += 1.

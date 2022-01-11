@@ -102,7 +102,7 @@ def detect_model():
 
     model = Model(inputs=vgg16.input, outputs=x)
     adam = Adam(learning_rate=1e-3, beta_1=0.9, beta_2=0.999)
-    model.compile(loss=mean_squared_error, optimizer=adam, metrics=['mse', 'mae'])
+    model.compile(loss=mean_squared_error, optimizer=adam, metrics='mse')
 
     feature = Model(inputs=vgg16.input,outputs=[hidden_1, hidden_2, hidden_3])
 
