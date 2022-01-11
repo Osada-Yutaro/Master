@@ -45,7 +45,10 @@ def load_data(num):
     xs = [[] for _ in range(5)]
     ys = [[] for _ in range(5)]
 
+    print(targets)
+
     for target in targets:
+        print(target)
         id, center = target
         xc, yc = center
         y0 = int(yc - 112)
