@@ -106,7 +106,7 @@ def reID_model():
     x = Dense(512, activation='relu')(combined)
     output = Dense(1)(x)
     model = Model(inputs=[x1, x2, x3, y1, y2, y3], outputs=output)
-    model.compile(loss='mean_squared_error', optimizer='adam', metrics='mse')
+    model.compile(loss='mean_squared_error', optimizer='adam')
     return model
 
 def get_feature(center, layer_2, layer_5, layer_9):
