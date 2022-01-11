@@ -198,7 +198,7 @@ def main():
 
             for j in range(TAGS):
                 valid_history[j].append((f1, f2, f3))
-                if len(valid_history[j] > 40):
+                if len(valid_history[j]) > 40:
                     valid_history[j].pop(0)
         
         with open(log_file_path, mode='a') as f:
