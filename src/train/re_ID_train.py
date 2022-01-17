@@ -167,7 +167,7 @@ def main():
 
             for j in range(TAGS):
                 train_history[j].append((f1, f2, f3))
-                if len(train_history[j] > 40):
+                if len(train_history[j]) > 40:
                     train_history[j].pop(0)
 
         valid_loss = 1e-9
