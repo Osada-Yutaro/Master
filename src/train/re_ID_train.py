@@ -45,10 +45,8 @@ def load_data(num):
     xs = [[] for _ in range(5)]
     ys = [[] for _ in range(5)]
 
-    print(targets)
 
     for target in targets.items():
-        print(target)
         id, center = target
         xc, yc = center
         y0 = int(yc - 112)
@@ -153,9 +151,7 @@ def main():
                     continue
                 for k in range(TAGS):
                     for x in train_history[j]:
-                        A = det_model.predict(Xs[j])
-                        print(A.shape)
-                        y1, y2, y3 = det_model.predict(Xs[j])[0]
+                        y1, y2, y3 = det_model.predict(np.array(Xs[j], dtype=np.float32))[0]
 
                         x1, x2, x3 = x
 
