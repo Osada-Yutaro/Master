@@ -52,6 +52,9 @@ def load_data(num):
         y0 = int(yc - 112)
         x0 = int(xc - 112)
         src = image[y0:y0 + 224, x0:x0 + 224]
+        height, width, _ = src.shape
+        if not(height == 224 and width == 224):
+            continue
         xs[id].append(src)
         ys[id].append((xc, yc))
     return xs, ys
@@ -151,8 +154,6 @@ def main():
                     continue
                 for k in range(TAGS):
                     for x in train_history[j]:
-                        A = det_model.predict(np.array(Xs[j], dtype=np.float32))
-                        print(A.shape)
                         y1, y2, y3 = det_model.predict(np.array(Xs[j], dtype=np.float32))[0]
 
                         x1, x2, x3 = x
