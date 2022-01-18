@@ -144,7 +144,7 @@ def main():
         train_count = 1e-9
         for i in range(M):
             Xs, Ys = load_data(i)
-            EMPTY = [[] for _ in range(5)]
+            EMPTY = [() for _ in range(5)]
             if EMPTY == Xs:
                 continue
 
@@ -165,26 +165,24 @@ def main():
                 f2 = np.array([f2])
                 f3 = np.array([f3])
 
-                for x in train_history[j]:
-                    x1, x2, x3 = x
-                    for k in range(TAGS):
-                        target = np.array([1. if k == j else 0.], dtype=np.float32)
-                        print(x1.shape)
-                        print(x2.shape)
-                        print(x3.shape)
-                        print(f1.shape)
-                        print(f2.shape)
-                        print(f3.shape)
+                x = train_history[j]
+                x1, x2, x3 = x
+                for k in range(TAGS):
+                    target = np.array([1. if k == j else 0.], dtype=np.float32)
+                    print(x1.shape)
+                    print(x2.shape)
+                    print(x3.shape)
+                    print(f1.shape)
+                    print(f2.shape)
+                    print(f3.shape)
 
-                        train_loss += re_model.train_on_batch(x=[x1, x2, x3, f1, f2, f3], y=target)
-                        exit(334)
-                        print(epoch, i, j, k, train_loss)
-                        train_count += 1.
+                    train_loss += re_model.train_on_batch(x=[x1, x2, x3, f1, f2, f3], y=target)
+                    exit(334)
+                    print(epoch, i, j, k, train_loss)
+                    train_count += 1.
 
             for j in range(TAGS):
-                train_history[j].append((f1, f2, f3))
-                if len(train_history[j]) > 40:
-                    train_history[j].pop(0)
+                train_history[j] = (f1, f2, f3)
 
         valid_loss = 1e-9
         valid_history = []
@@ -200,25 +198,23 @@ def main():
                 if Xs[j] == []:
                     continue
                 for k in range(TAGS):
-                    for x in valid_history[j]:
+                    x = valid_history[j]
 
-                        x1, x2, x3 = x
+                    x1, x2, x3 = x
 
-                        y1, y2, y3 = det_model.predict(np.array(Xs[j], dtype=np.float32))
-                        y1 = y1[0]
-                        y2 = y2[0]
-                        y3 = y3[0]
-                        f1, f2, f3 = get_feature(Ys[j][0], y1, y2, y3)
+                    y1, y2, y3 = det_model.predict(np.array(Xs[j], dtype=np.float32))
+                    y1 = y1[0]
+                    y2 = y2[0]
+                    y3 = y3[0]
+                    f1, f2, f3 = get_feature(Ys[j][0], y1, y2, y3)
 
-                        target = 1 if k == j else 0.
+                    target = 1 if k == j else 0.
                     
-                        valid_loss += re_model.evaluate(x=[x1, x2, x3, y1, y2, y3], y=target)
-                        valid_count += 1.
+                    valid_loss += re_model.evaluate(x=[x1, x2, x3, y1, y2, y3], y=target)
+                    valid_count += 1.
 
             for j in range(TAGS):
-                valid_history[j].append((f1, f2, f3))
-                if len(valid_history[j]) > 40:
-                    valid_history[j].pop(0)
+                valid_history[j] = (f1, f2, f3)
         
         with open(log_file_path, mode='a') as f:
             message = join_nums(
