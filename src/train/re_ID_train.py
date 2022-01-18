@@ -157,20 +157,24 @@ def main():
                 y2 = y2[0]
                 y3 = y3[0]
                 f1, f2, f3 = get_feature(Ys[j][0], y1, y2, y3)
+
+                f1 = np.array([f1])
+                f2 = np.array([f2])
+                f3 = np.array([f3])
+
                 for x in train_history[j]:
                     x1, x2, x3 = x
                     for k in range(TAGS):
-                        target = 1. if k == j else 0.
-
-                        print(re_model.input)
-                        print(x1.input)
-                        print(x2.input)
-                        print(x3.input)
-                        print(f1.input)
-                        print(f2.input)
-                        print(f3.input)
+                        target = np.array([1. if k == j else 0.], dtype=np.float32)
+                        print(x1.shape)
+                        print(x2.shape)
+                        print(x3.shape)
+                        print(f1.shape)
+                        print(f2.shape)
+                        print(f3.shape)
 
                         train_loss += re_model.train_on_batch(x=[x1, x2, x3, f1, f2, f3], y=target)
+                        exit(334)
                         print(epoch, i, j, k, train_loss)
                         train_count += 1.
 
