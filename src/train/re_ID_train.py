@@ -156,8 +156,7 @@ def main():
                 y1 = y1[0]
                 y2 = y2[0]
                 y3 = y3[0]
-                print(Ys[j])
-                f1, f2, f3 = get_feature(Ys[j], y1, y2, y3)
+                f1, f2, f3 = get_feature(Ys[j][0], y1, y2, y3)
                 for x in train_history[j]:
                     x1, x2, x3 = x
                     for k in range(TAGS):
@@ -190,8 +189,11 @@ def main():
 
                         x1, x2, x3 = x
 
-                        y1, y2, y3 = det_model.predict(Xs[j])[0]
-                        f1, f2, f3 = get_feature(Ys[j], y1, y2, y3)
+                        y1, y2, y3 = det_model.predict(np.array(Xs[j], dtype=np.float32))
+                        y1 = y1[0]
+                        y2 = y2[0]
+                        y3 = y3[0]
+                        f1, f2, f3 = get_feature(Ys[j][0], y1, y2, y3)
 
                         target = 1 if k == j else 0.
                     
