@@ -12,6 +12,7 @@ from tensorflow.keras import backend as K
 import cv2
 from hungarian import Hungarian
 import time
+from munkres import Munkres
 
 kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(5,5))
 fgbg = cv2.createBackgroundSubtractorMOG2(detectShadows=False)
@@ -240,7 +241,7 @@ def main():
                     else:
                         score[j][id] = 0.5
                 id += 1
-        hung = Hungarian()
+        hung = Munkres()
         optimal = hung.compute(score)
         answers = []
         for opt in optimal:
