@@ -191,7 +191,7 @@ def main():
         X, _, offsets = load_data(i)
         length = len(X)
         detection_count += length
-        BATCH_SIZE = 4
+        BATCH_SIZE = 1
 
         score = np.array([[0 for _ in range(40)] for _ in range(TAGS)], dtype=np.float32)
         detected_points = []
