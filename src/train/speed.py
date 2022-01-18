@@ -251,6 +251,10 @@ def main():
             tag, id = answer
             feature_history[tag] = features[id]
     end = time.time()
+
+    print('run time:', end - start, '[sec]')
+    print('run detection:', detection_count)
+    print('run re_ID:', reid_count)
     return
 
 if __name__ == '__main__':
