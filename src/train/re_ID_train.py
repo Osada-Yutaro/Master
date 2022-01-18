@@ -115,9 +115,12 @@ def reID_model():
 
 def get_feature(center, layer_2, layer_5, layer_9):
     xc, yc = center
-    f1 = layer_2[0, int(yc - 8):int(yc - 8) + 16, int(xc - 8):int(xc - 8) + 16, :]
-    f2 = layer_5[0, int(yc/2 - 4):int(yc/2 - 4) + 8, int(xc/2 - 4):int(xc/2 - 4) + 8, :]
-    f3 = layer_9[0, int(yc/4 - 2):int(yc/4 - 2) + 4, int(xc/4 - 2):int(xc/4 - 2) + 4, :]
+    print(layer_2.shape)
+    print(layer_5.shape)
+    print(layer_9.shape)
+    f1 = layer_2[int(yc - 8):int(yc - 8) + 16, int(xc - 8):int(xc - 8) + 16, :]
+    f2 = layer_5[int(yc/2 - 4):int(yc/2 - 4) + 8, int(xc/2 - 4):int(xc/2 - 4) + 8, :]
+    f3 = layer_9[int(yc/4 - 2):int(yc/4 - 2) + 4, int(xc/4 - 2):int(xc/4 - 2) + 4, :]
     return f1, f2, f3
 
 def main():
