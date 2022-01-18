@@ -126,7 +126,7 @@ def main():
 
     M = 3000
     N = 100
-    L = 5400 - M
+    L = 5820
     for epoch in range(N):
         train_loss = 0
         for i in range(M):
@@ -139,7 +139,7 @@ def main():
                 train_loss += loss/length
 
         valid_loss = 0
-        for i in range(M, 5400):
+        for i in range(M, L):
             X, Y = load_data(i)
             loss = model.evaluate(x=X, y={'output':Y}, verbose=0)
             valid_loss += loss
