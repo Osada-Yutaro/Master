@@ -140,17 +140,13 @@ def main():
     TAGS = 5
     for epoch in range(N):
         train_loss = 1e-9
-        train_history = [[] for _ in range(TAGS)]
+        train_history = [() for _ in range(TAGS)]
         train_count = 1e-9
         for i in range(M):
             Xs, Ys = load_data(i)
             EMPTY = [() for _ in range(5)]
             if EMPTY == Xs:
                 continue
-
-            f1 = None
-            f2 = None
-            f3 = None
 
             for j in range(TAGS):
                 if Xs[j] == []:
@@ -166,6 +162,9 @@ def main():
                 f3 = np.array([f3])
 
                 x = train_history[j]
+                train_history[j] = (f1, f2, f3)
+                if x == ():
+                    continue
                 x1, x2, x3 = x
                 for k in range(TAGS):
                     target = np.array([1. if k == j else 0.], dtype=np.float32)
@@ -181,11 +180,9 @@ def main():
                     print(epoch, i, j, k, train_loss)
                     train_count += 1.
 
-            for j in range(TAGS):
-                train_history[j] = (f1, f2, f3)
 
         valid_loss = 1e-9
-        valid_history = []
+        valid_history = [() for _ in range(TAGS)]
         valid_count = 1e-9
 
         for i in range(M, L):
@@ -197,24 +194,23 @@ def main():
             for j in range(TAGS):
                 if Xs[j] == []:
                     continue
+                y1, y2, y3 = det_model.predict(np.array(Xs[j], dtype=np.float32))
+                y1 = y1[0]
+                y2 = y2[0]
+                y3 = y3[0]
+                f1, f2, f3 = get_feature(Ys[j][0], y1, y2, y3)
+
+                x = valid_history[j]
+                valid_history[j] = (f1, f2, f3)
+
+                if x == ():
+                    continue
+                x1, x2, x3 = x
                 for k in range(TAGS):
-                    x = valid_history[j]
-
-                    x1, x2, x3 = x
-
-                    y1, y2, y3 = det_model.predict(np.array(Xs[j], dtype=np.float32))
-                    y1 = y1[0]
-                    y2 = y2[0]
-                    y3 = y3[0]
-                    f1, f2, f3 = get_feature(Ys[j][0], y1, y2, y3)
-
                     target = 1 if k == j else 0.
                     
                     valid_loss += re_model.evaluate(x=[x1, x2, x3, y1, y2, y3], y=target)
                     valid_count += 1.
-
-            for j in range(TAGS):
-                valid_history[j] = (f1, f2, f3)
         
         with open(log_file_path, mode='a') as f:
             message = join_nums(
