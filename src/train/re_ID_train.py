@@ -152,17 +152,16 @@ def main():
             for j in range(TAGS):
                 if Xs[j] == []:
                     continue
-                for k in range(TAGS):
-                    for x in train_history[j]:
-                        A = det_model.predict(np.array(Xs[j], dtype=np.float32))
-                        print(A.shape)
-                        y1, y2, y3 = det_model.predict(np.array(Xs[j], dtype=np.float32))[0]
-
-                        x1, x2, x3 = x
-
+                A = det_model.predict(np.array(Xs[j], dtype=np.float32))
+                print(len(A))
+                for a in A:
+                    print(a.shape)
+                y1, y2, y3 = det_model.predict(np.array(Xs[j], dtype=np.float32))[0]
+                f1, f2, f3 = get_feature(Ys[j], y1, y2, y3)
+                for x in train_history[j]:
+                    x1, x2, x3 = x
+                    for k in range(TAGS):
                         target = 1. if k == j else 0.
-                        
-                        f1, f2, f3 = get_feature(Ys[j], y1, y2, y3)
 
                         train_loss += re_model.train_on_batch(x=[x1, x2, x3, f1, f2, f3], y=target)
                         print(epoch, i, j, k, train_loss)
