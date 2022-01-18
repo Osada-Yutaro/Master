@@ -115,9 +115,7 @@ def reID_model():
 
 def get_feature(center, layer_2, layer_5, layer_9):
     xc, yc = center
-    print(layer_2.shape)
-    print(layer_5.shape)
-    print(layer_9.shape)
+    print(xc, yc)
     f1 = layer_2[int(yc - 8):int(yc - 8) + 16, int(xc - 8):int(xc - 8) + 16, :]
     f2 = layer_5[int(yc/2 - 4):int(yc/2 - 4) + 8, int(xc/2 - 4):int(xc/2 - 4) + 8, :]
     f3 = layer_9[int(yc/4 - 2):int(yc/4 - 2) + 4, int(xc/4 - 2):int(xc/4 - 2) + 4, :]
@@ -168,13 +166,6 @@ def main():
                 x1, x2, x3 = x
                 for k in range(TAGS):
                     target = np.array([1. if k == j else 0.], dtype=np.float32)
-                    print(x1.shape)
-                    print(x2.shape)
-                    print(x3.shape)
-                    print(f1.shape)
-                    print(f2.shape)
-                    print(f3.shape)
-
                     train_loss += re_model.train_on_batch(x=[x1, x2, x3, f1, f2, f3], y=target)
                     exit(334)
                     print(epoch, i, j, k, train_loss)
