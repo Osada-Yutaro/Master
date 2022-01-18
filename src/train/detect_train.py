@@ -124,12 +124,12 @@ def main():
         f.write(message)
     model, _ = detect_model()
 
-    M = 180
+    M = 3000
     N = 100
-    L = 221 - M
+    L = 5400 - M
     for epoch in range(N):
         train_loss = 0
-        for i in range(N):
+        for i in range(M):
             X, Y = load_data(i)
             length = len(X)
             BATCH_SIZE = 4
@@ -139,7 +139,7 @@ def main():
                 train_loss += loss/length
 
         valid_loss = 0
-        for i in range(M, 221):
+        for i in range(M, 5400):
             X, Y = load_data(i)
             loss = model.evaluate(x=X, y={'output':Y}, verbose=0)
             valid_loss += loss
