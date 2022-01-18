@@ -152,11 +152,10 @@ def main():
             for j in range(TAGS):
                 if Xs[j] == []:
                     continue
-                A = det_model.predict(np.array(Xs[j], dtype=np.float32))
-                print(len(A))
-                for a in A:
-                    print(a.shape)
-                y1, y2, y3 = det_model.predict(np.array(Xs[j], dtype=np.float32))[0]
+                y1, y2, y3 = det_model.predict(np.array(Xs[j], dtype=np.float32))
+                y1 = y1[0]
+                y2 = y2[0]
+                y3 = y3[0]
                 f1, f2, f3 = get_feature(Ys[j], y1, y2, y3)
                 for x in train_history[j]:
                     x1, x2, x3 = x
