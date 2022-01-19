@@ -163,7 +163,7 @@ def main():
                 valid_loss/valid_count,
                 )
             f.write(message)
-        if epoch == 90:
+        if epoch%10 == 0:
             model.save(model_file_path)
 
     model.save(model_file_path)
