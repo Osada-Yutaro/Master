@@ -159,9 +159,9 @@ def main():
                 )
             f.write(message)
         if epoch%10 == 0:
-            models.save_model(model_file_path)
+            save_model(model_file_path)
 
-    models.save_model(model_file_path)
+    save_model(model_file_path)
     return model
 
 def sample(model):
