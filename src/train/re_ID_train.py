@@ -172,7 +172,6 @@ def main():
                 for k in range(TAGS):
                     target = np.array([1. if k == j else 0.], dtype=np.float32)
                     train_loss += re_model.train_on_batch(x=[x1, x2, x3, f1, f2, f3], y=target)
-                    exit(334)
                     print(epoch, i, j, k, train_loss)
                     train_count += 1.
 
