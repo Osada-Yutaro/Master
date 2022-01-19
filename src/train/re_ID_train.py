@@ -104,8 +104,7 @@ def reID_model():
 
     combined = Concatenate()([feature_1, feature_2])
     combined = Flatten()(combined)
-    x = Dense(512, activation='relu')(combined)
-    output = Dense(1)(x)
+    output = Dense(1)(combined)
     model = Model(inputs=[x1, x2, x3, y1, y2, y3], outputs=output)
     model.compile(loss='mean_squared_error', optimizer='adam')
     return model
