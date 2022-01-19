@@ -1,7 +1,7 @@
 import os
 import datetime
 import tensorflow as tf
-from tensorflow.keras.models import load_model
+from tensorflow.keras.models import load_model, save_model
 from tensorflow.keras.losses import mean_squared_error
 from tensorflow.keras import applications
 from tensorflow.keras.models import Model
@@ -159,9 +159,9 @@ def main():
                 )
             f.write(message)
         if epoch%10 == 0:
-            model.save(model_file_path)
+            models.save_model(model_file_path)
 
-    model.save(model_file_path)
+    models.save_model(model_file_path)
     return model
 
 def sample(model):

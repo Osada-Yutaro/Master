@@ -1,6 +1,6 @@
 import os
 import datetime
-from tensorflow.keras.models import load_model
+from tensorflow.keras.models import load_model, save_model
 from tensorflow.keras.losses import mean_squared_error
 from tensorflow.keras import applications
 from tensorflow.keras.models import Model
@@ -214,8 +214,10 @@ def main():
                 valid_loss/valid_count,
                 )
             f.write(message)
+        if epoch%10 == 0:
+            save_model(model_file_path)
 
-    re_model.save(model_file_path)
+    save_model(model_file_path)
     return re_model
 
 if __name__ == '__main__':
