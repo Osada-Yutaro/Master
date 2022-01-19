@@ -126,10 +126,10 @@ def main():
     model, _ = detect_model()
 
     M = 3000
-    N = 100
+    N = 50
     L = 5820
 
-    for epoch in range(50):
+    for epoch in range(N):
         train_count = 1e-9
         train_loss = 0
         for i in range(M):
