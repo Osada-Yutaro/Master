@@ -115,6 +115,7 @@ def join_nums(*args):
     return s + '\n'
 
 def main():
+    tf.config.gpu.set_per_process_memory_growth(True)
     now = datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S')
     log_file_name = now + '.txt'
     log_file_path = os.path.join('/', 'kw_resources', 'Master', 'Log', log_file_name)
