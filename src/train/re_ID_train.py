@@ -119,11 +119,11 @@ def get_feature(center, layer_2, layer_5, layer_9):
     yc *= 224
 
     top1 = min(max(int(yc - 8), 0), 224 - 16)
-    top2 = min(max(int(yc/2 - 4), 0), 224 - 8)
-    top3 = min(max(int(yc/4 - 2), 0), 224 - 4)
+    top2 = min(max(int(yc/2 - 4), 0), 112 - 8)
+    top3 = min(max(int(yc/4 - 2), 0), 56 - 4)
     left1 = min(max(int(yc - 8), 0), 224 - 16)
-    left2 = min(max(int(yc/2 - 4), 0), 224 - 8)
-    left3 = min(max(int(yc/4 - 2), 0), 224 - 4)
+    left2 = min(max(int(yc/2 - 4), 0), 112 - 8)
+    left3 = min(max(int(yc/4 - 2), 0), 56 - 4)
 
     f1 = layer_2[top1:top1 + 16, left1:left1 + 16, :]
     f2 = layer_5[top2:top2 + 8, left2:left2 + 8, :]
