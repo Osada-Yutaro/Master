@@ -68,20 +68,17 @@ def featuring_model():
     x = MaxPooling2D(pool_size=(2,2))(x)
     x = Conv2D(filters=64, kernel_size=1, strides=1, padding='same')(x)
     x = MaxPooling2D(pool_size=2, padding='same')(x)
-    x = Conv2D(filters=64, kernel_size=1, strides=1, padding='same')(x)
     x = Flatten()(x)
     x = Dense(128, activation='relu')(x)
 
     y = input2
     y = Conv2D(filters=128, kernel_size=3, strides=1, padding='same')(y)
     y = MaxPooling2D(pool_size=2, padding='same')(y)
-    y = Conv2D(filters=128, kernel_size=1, strides=1, padding='same')(y)
     y = Flatten()(y)
     y = Dense(128, activation='relu')(y)
 
     z = input3
     z = Conv2D(filters=256, kernel_size=3, strides=1, padding='same')(z)
-    z = Conv2D(filters=256, kernel_size=1, strides=1, padding='same')(z)
     z = Flatten()(z)
     z = Dense(256, activation='relu')(z)
 
@@ -179,7 +176,6 @@ def main():
                     exit(334)
                     print(epoch, i, j, k, train_loss)
                     train_count += 1.
-
 
         valid_loss = 1e-9
         valid_history = [() for _ in range(TAGS)]
