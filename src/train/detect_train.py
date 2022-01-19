@@ -127,7 +127,9 @@ def main():
     M = 3000
     N = 100
     L = 5820
+
     for epoch in range(N):
+        train_count = 0
         train_loss = 0
         for i in range(M):
             X, Y = load_data(i)
@@ -136,21 +138,27 @@ def main():
             for batch in range(0, length, BATCH_SIZE):
                 end = min(batch + BATCH_SIZE, length)
                 loss = model.train_on_batch(x=X[batch:batch+BATCH_SIZE], y={'output':Y[batch:batch+BATCH_SIZE]})
-                train_loss += loss/length
+                train_loss += loss*length
+                train_count += length
 
         valid_loss = 0
+        valid_count = 0
         for i in range(M, L):
             X, Y = load_data(i)
+            length = len(X)
             loss = model.evaluate(x=X, y={'output':Y}, verbose=0)
-            valid_loss += loss
-        
+            valid_loss += loss*length
+            valid_count += length
+
         with open(log_file_path, mode='a') as f:
             message = join_nums(
                 epoch,
                 train_loss/M,
-                valid_loss/L,
+                valid_loss/valid_count,
                 )
             f.write(message)
+        if epoch == 90:
+            model.save(model_file_path)
 
     model.save(model_file_path)
     return model
