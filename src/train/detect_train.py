@@ -126,7 +126,7 @@ def main():
     model, _ = detect_model()
 
     M = 3000
-    N = 50
+    N = 100
     L = 5820
 
     for epoch in range(N):
@@ -159,9 +159,9 @@ def main():
                 )
             f.write(message)
         if epoch%10 == 0:
-            save_model(model_file_path)
+            save_model(model, model_file_path)
 
-    save_model(model_file_path)
+    save_model(model, model_file_path)
     return model
 
 def sample(model):

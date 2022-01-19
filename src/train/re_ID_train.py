@@ -215,9 +215,9 @@ def main():
                 )
             f.write(message)
         if epoch%10 == 0:
-            save_model(model_file_path)
+            save_model(re_model, model_file_path)
 
-    save_model(model_file_path)
+    save_model(re_model, model_file_path)
     return re_model
 
 if __name__ == '__main__':
