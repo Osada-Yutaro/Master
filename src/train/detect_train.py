@@ -116,11 +116,6 @@ def join_nums(*args):
     return s + '\n'
 
 def main():
-    gpu_id = 0
-    physical_devices = tf.config.list_physical_devices('GPU')
-    tf.config.list_physical_devices('GPU')
-    tf.config.set_visible_devices(physical_devices[gpu_id], 'GPU')
-    tf.config.experimental.set_memory_growth(physical_devices[gpu_id], True)
     now = datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S')
     log_file_name = now + '.txt'
     log_file_path = os.path.join('/', 'kw_resources', 'Master', 'Log', log_file_name)
