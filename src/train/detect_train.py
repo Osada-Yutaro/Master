@@ -86,9 +86,9 @@ def detect_model():
     for layer in vgg16.layers:
         layer.trainable = False
 
-    hidden_1 = get_layer(vgg16, 'block1_conv2').output
-    hidden_2 = get_layer(vgg16, 'block2_conv2').output
-    hidden_3 = get_layer(vgg16, 'block3_conv3').output
+    hidden_1 = get_layer(vgg16, 'block2_conv2').output
+    hidden_2 = get_layer(vgg16, 'block3_conv3').output
+    hidden_3 = get_layer(vgg16, 'block4_conv3').output
 
     x = vgg16.output
     x = Conv2D(filters=256, kernel_size=(1, 1), strides=(1, 1), padding='same')(x)

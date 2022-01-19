@@ -60,28 +60,28 @@ def load_data(num):
     return xs, ys
 
 def featuring_model():
-    input1 = Input(shape=(16, 16, 64))
-    input2 = Input(shape=(8, 8, 128))
-    input3 = Input(shape=(4, 4, 256))
+    input1 = Input(shape=(4, 4, 128))
+    input2 = Input(shape=(2, 2, 256))
+    input3 = Input(shape=(1, 1, 512))
 
     x = input1
-    x = Conv2D(filters=64, kernel_size=3, strides=1, padding='same')(x)
+    x = MaxPooling2D(pool_size=(2,2))(x)
+    x = Conv2D(filters=64, kernel_size=1, strides=1, padding='same')(x)
     x = MaxPooling2D(pool_size=2, padding='same')(x)
-    x = Conv2D(filters=32, kernel_size=1, strides=1, padding='same')(x)
+    x = Conv2D(filters=64, kernel_size=1, strides=1, padding='same')(x)
     x = Flatten()(x)
-    x = Dense(256, activation='relu')(x)
+    x = Dense(128, activation='relu')(x)
 
     y = input2
     y = Conv2D(filters=128, kernel_size=3, strides=1, padding='same')(y)
     y = MaxPooling2D(pool_size=2, padding='same')(y)
-    y = Conv2D(filters=64, kernel_size=1, strides=1, padding='same')(y)
+    y = Conv2D(filters=128, kernel_size=1, strides=1, padding='same')(y)
     y = Flatten()(y)
-    y = Dense(256, activation='relu')(y)
+    y = Dense(128, activation='relu')(y)
 
     z = input3
     z = Conv2D(filters=256, kernel_size=3, strides=1, padding='same')(z)
-    z = MaxPooling2D(pool_size=2, padding='same')(z)
-    z = Conv2D(filters=64, kernel_size=1, strides=1, padding='same')(z)
+    z = Conv2D(filters=256, kernel_size=1, strides=1, padding='same')(z)
     z = Flatten()(z)
     z = Dense(256, activation='relu')(z)
 
@@ -94,13 +94,13 @@ def featuring_model():
 
 def reID_model():
     feature_model = featuring_model()
-    x1 = Input(shape=(16, 16, 64))
-    x2 = Input(shape=(8, 8, 128))
-    x3 = Input(shape=(4, 4, 256))
+    x1 = Input(shape=(4, 4, 128))
+    x2 = Input(shape=(2, 2, 256))
+    x3 = Input(shape=(1, 1, 512))
 
-    y1 = Input(shape=(16, 16, 64))
-    y2 = Input(shape=(8, 8, 128))
-    y3 = Input(shape=(4, 4, 256))
+    y1 = Input(shape=(4, 4, 128))
+    y2 = Input(shape=(2, 2, 256))
+    y3 = Input(shape=(1, 1, 512))
 
     feature_1 = feature_model([x1, x2, x3])
     feature_2 = feature_model([y1, y2, y3])
@@ -118,16 +118,16 @@ def get_feature(center, layer_2, layer_5, layer_9):
     xc *= 224
     yc *= 224
 
-    top1 = min(max(int(yc - 8), 0), 224 - 16)
-    top2 = min(max(int(yc/2 - 4), 0), 112 - 8)
-    top3 = min(max(int(yc/4 - 2), 0), 56 - 4)
-    left1 = min(max(int(yc - 8), 0), 224 - 16)
-    left2 = min(max(int(yc/2 - 4), 0), 112 - 8)
-    left3 = min(max(int(yc/4 - 2), 0), 56 - 4)
+    top1 = min(max(int(yc - 8), 0), 112 - 4)
+    top2 = min(max(int(yc/2 - 4), 0), 56 - 2)
+    top3 = min(max(int(yc/4 - 2), 0), 28 - 1)
+    left1 = min(max(int(yc - 8), 0), 112 - 4)
+    left2 = min(max(int(yc/2 - 4), 0), 56 - 2)
+    left3 = min(max(int(yc/4 - 2), 0), 28 - 1)
 
-    f1 = layer_2[top1:top1 + 16, left1:left1 + 16, :]
-    f2 = layer_5[top2:top2 + 8, left2:left2 + 8, :]
-    f3 = layer_9[top3:top3 + 4, left3:left3 + 4, :]
+    f1 = layer_2[top1:top1 + 4, left1:left1 + 4, :]
+    f2 = layer_5[top2:top2 + 2, left2:left2 + 2, :]
+    f3 = layer_9[top3:top3 + 1, left3:left3 + 1, :]
     return f1, f2, f3
 
 def main():
