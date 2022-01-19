@@ -1,5 +1,6 @@
 import os
 import datetime
+import tensorflow as tf
 from tensorflow.keras.models import load_model
 from tensorflow.keras.losses import mean_squared_error
 from tensorflow.keras import applications
