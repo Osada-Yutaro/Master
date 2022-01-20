@@ -124,10 +124,6 @@ def get_feature(center, layer_2, layer_5, layer_9):
     f1 = layer_2[top1:top1 + 4, left1:left1 + 4, :]
     f2 = layer_5[top2:top2 + 2, left2:left2 + 2, :]
     f3 = layer_9[top3:top3 + 1, left3:left3 + 1, :]
-    
-    f1 = np.array(f1, dtype=np.float32)
-    f2 = np.array(f2, dtype=np.float32)
-    f3 = np.array(f3, dtype=np.float32)
     return f1, f2, f3
 
 def main():
@@ -164,6 +160,10 @@ def main():
                 y3 = y3[0]
                 f1, f2, f3 = get_feature(Ys[j][0], y1, y2, y3)
 
+                f1 = np.array([f1])
+                f2 = np.array([f2])
+                f3 = np.array([f3])
+
                 x = train_history[j]
                 train_history[j] = (f1, f2, f3)
                 if x == ():
@@ -193,6 +193,9 @@ def main():
                 y2 = y2[0]
                 y3 = y3[0]
                 f1, f2, f3 = get_feature(Ys[j][0], y1, y2, y3)
+                f1 = np.array([f1])
+                f2 = np.array([f2])
+                f3 = np.array([f3])
 
                 x = valid_history[j]
                 valid_history[j] = (f1, f2, f3)
