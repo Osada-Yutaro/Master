@@ -201,7 +201,7 @@ def main():
                     continue
                 x1, x2, x3 = x
                 for k in range(TAGS):
-                    target = 1 if k == j else 0.
+                    target = np.array([1. if k == j else 0.], dtype=np.float32)
                     
                     valid_loss += re_model.evaluate(x=[x1, x2, x3, f1, f2, f3], y=target)
                     valid_count += 1.
