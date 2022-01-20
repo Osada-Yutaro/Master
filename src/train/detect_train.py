@@ -123,13 +123,15 @@ def main():
     with open(log_file_path, mode='w') as f:
         message = 'Epoch Train_Loss Valid_Loss\n'
         f.write(message)
-    model, _ = detect_model()
+    #model, _ = detect_model()
+    load_model_path = os.path.join('/kw_resources', 'Master', 'Model', '2022-01-20-00:21:15')
+    model = load_model(load_model_path)
 
     M = 3000
     N = 100
     L = 5820
 
-    for epoch in range(N):
+    for epoch in range(61, N):
         train_count = 1e-9
         train_loss = 0
         for i in range(M):
