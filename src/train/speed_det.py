@@ -56,7 +56,7 @@ def load_data(num):
             cropped_win = cv2.resize(cropped_win, (224, 224))
             cropped_win = np.array([cropped_win])
             mask = np.array(fgmask[y:y + WIN_SIZE, x:x + WIN_SIZE], np.float32)/255
-            if 0.3 < np.mean(mask):
+            if 0.1 < np.mean(mask):
                 X.append(cropped_win)
     return np.array(X, dtype=np.float32), 0 == len(targets)
 
