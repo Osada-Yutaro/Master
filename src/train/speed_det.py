@@ -98,8 +98,10 @@ def main():
         length = len(X)
         detection_count += length
         n += 1
+        """
         for j in range(length):
             dst = det_model.predict(X[j])
+        """
     end = time.time()
 
     print('run time:', end - start, '[sec]')
