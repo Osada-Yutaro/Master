@@ -55,11 +55,10 @@ def load_data(num):
 
     for x in range(0, WIDTH - WIN_SIZE, WIN_SIZE//3):
         for y in range(0, HEIGHT - WIN_SIZE, WIN_SIZE//3):
-            if np.mean(cropped_win) < 0.5:
-                continue
             cropped_win = image[y:y + WIN_SIZE, x:x + WIN_SIZE]
             cropped_win = cv2.resize(cropped_win, (224, 224))
-            X.append(cropped_win)
+            if 0.5 < np.mean(cropped_win):
+                X.append(cropped_win)
     return np.array(X, dtype=np.float32)
 
 def detect_model():
