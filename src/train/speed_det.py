@@ -91,17 +91,16 @@ def main():
     n = 0
 
     for i in range(4500, 5820):
-        print(i)
         if i%100 == 0:
             print('now:', i)
         X = load_data(i)
         length = len(X)
+        if length == 0:
+            continue
         detection_count += length
         n += 1
-        """
         for j in range(length):
             dst = det_model.predict(X[j])
-        """
     end = time.time()
 
     print('run time:', end - start, '[sec]')
