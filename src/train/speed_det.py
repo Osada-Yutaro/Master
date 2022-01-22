@@ -42,6 +42,8 @@ def load_data(num):
     X = []
 
     image = load_images(num)
+    targets = load_targets()[num]
+    isempty = targets == {}
 
     fgmask = fgbg.apply(image)
     fgmask = cv2.morphologyEx(fgmask, cv2.MORPH_OPEN, kernel)
@@ -55,9 +57,9 @@ def load_data(num):
             cropped_win = cv2.resize(cropped_win, (224, 224))
             cropped_win = np.array([cropped_win])
             mask = fgmask[y:y + WIN_SIZE, x:x + WIN_SIZE]
-            if 0.9 < np.mean(cropped_win):
+            if 0.8 < np.mean(cropped_win):
                 X.append(cropped_win)
-    return np.array(X, dtype=np.float32)
+    return np.array(X, dtype=np.float32), isempty
 
 def join_nums(*args):
     s = ''
@@ -80,10 +82,19 @@ def main():
 
     n = 0
     t = 0
+    true_positive = 0
+    false_positive = 0
+    false_negative = 0
 
     for i in range(4500, 5820):
-        X = load_data(i)
+        X, isempty = load_data(i)
         length = len(X)
+        if length == 0 and (not isempty):
+            false_negative += 1
+        if length != 0 and isempty:
+            false_negative += 1
+        if length != 0 and (not isempty):
+            true_positive += 1
         if length == 0:
             continue
         detection_count += length
@@ -97,7 +108,9 @@ def main():
     print('run time:', t, '[sec]')
     print('run detection:', detection_count)
     print('frame num:', n)
-    print('run re_ID:', reid_count)
+    print('TP:', true_positive)
+    print('FP:', false_positive)
+    print('FN:', false_negative)
     return
 
 if __name__ == '__main__':
