@@ -137,9 +137,9 @@ def main():
     re_model = reID_model()
     _, det_model = detect_model()
 
-    M = 3000
+    M = 3600
     N = 100
-    L = 5820
+    L = 4500
     TAGS = 5
     for epoch in range(N):
         train_loss = 1e-9

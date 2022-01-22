@@ -45,11 +45,8 @@ def key(center):
 
 def load_data(num):
     X = []
-    Y = []
-    offsets = []
 
     image = load_images(num)
-    targets = load_targets()[num]
 
     fgmask = fgbg.apply(image)
     fgmask = cv2.morphologyEx(fgmask, cv2.MORPH_OPEN, kernel)
@@ -63,17 +60,8 @@ def load_data(num):
                 continue
             cropped_win = image[y:y + WIN_SIZE, x:x + WIN_SIZE]
             cropped_win = cv2.resize(cropped_win, (224, 224))
-            targets_list = [[0 for _ in range(3)]]
-            for item in targets.items():
-                id, center = item
-                _, new_center = crop(image, center, (x, y), WIN_SIZE)
-                targets_list.append(new_center)
-            targets_list.sort(key=key)
-            target = targets_list[0]
             X.append(cropped_win)
-            Y.append(target)
-            offsets.append((x, y))
-    return np.array(X, dtype=np.float32), np.array(Y, dtype=np.float32)
+    return np.array(X, dtype=np.float32)
 
 def detect_model():
     vgg16 = applications.vgg16.VGG16(weights='imagenet', include_top=False, input_tensor=Input(shape=(224, 224, 3)))
@@ -186,7 +174,7 @@ def main():
     start = time.time()
 
     for i in range(4500, 5820):
-        X, _, offsets = load_data(i)
+        X = load_data(i)
         length = len(X)
         detection_count += length
         for j in range(length):
