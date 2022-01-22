@@ -82,7 +82,6 @@ def main():
     N = 100
     L = 4500
     TAGS = 5
-    feature_history = [() for _ in range(TAGS)]
 
     detection_count = 0
     reid_count = 0
@@ -92,6 +91,7 @@ def main():
     n = 0
 
     for i in range(4500, 5820):
+        print(i)
         if i%100 == 0:
             print('now:', i)
         X = load_data(i)
