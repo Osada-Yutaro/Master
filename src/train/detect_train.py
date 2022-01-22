@@ -140,6 +140,8 @@ def main():
         for i in range(M):
             X, Y = load_data(i)
             length = len(X)
+            if length == 0:
+                print('continue:', i)
             BATCH_SIZE = 4
             for batch in range(0, length, BATCH_SIZE):
                 end = min(batch + BATCH_SIZE, length)
