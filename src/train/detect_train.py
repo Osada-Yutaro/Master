@@ -53,7 +53,7 @@ def load_data(num):
 
     x0 = np.random.randint(0, WIN_SIZE)
     y0 = np.random.randint(0, WIN_SIZE)
-    if not targets:
+    if len(targets) == 0:
         return np.array(X, dtype=np.float32), np.array(Y, dtype=np.float32)
 
     for x in range(x0, WIDTH - WIN_SIZE, WIN_SIZE//3):
@@ -138,6 +138,9 @@ def main():
         train_count = 1e-9
         train_loss = 0
         for i in range(M):
+            with open('/kw_resources/Master/Log/aiueo.txt', mode='w') as f:
+                message = 'Epoch is ' + str(i) + ', ' + 'i is ' + str(i) + '\n'
+                f.write(message)
             X, Y = load_data(i)
             length = len(X)
             if length == 0:
@@ -145,7 +148,7 @@ def main():
             BATCH_SIZE = 4
             for batch in range(0, length, BATCH_SIZE):
                 end = min(batch + BATCH_SIZE, length)
-                loss = model.train_on_batch(x=X[batch:batch+BATCH_SIZE], y=Y[batch:batch+BATCH_SIZE])
+                loss = model.train_on_batch(x=X[batch:batch+length], y=Y[batch:batch+length])
                 train_loss += loss*length
                 train_count += length
 
