@@ -12,7 +12,6 @@ from tensorflow.keras import backend as K
 import cv2
 import time
 from tensorflow.keras.models import load_model, save_model
-from munkres import Munkres
 
 kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(5,5))
 fgbg = cv2.createBackgroundSubtractorMOG2(detectShadows=False)
