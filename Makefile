@@ -8,5 +8,8 @@ detection_train:
 re_ID_train:
 		$(PY) src/train/re_ID_train.py
 
-speed:
-		$(PY) src/train/speed.py
+speed_det:
+		$(PY) src/train/speed_det.py
+
+speed_re:
+		$(PY) src/train/speed_re.py
