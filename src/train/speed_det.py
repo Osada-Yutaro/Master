@@ -38,10 +38,6 @@ def crop(image, center, position, window_size):
         Y = [xc, yc, 1.]
     return X, Y
 
-def key(center):
-    _, _, c = center
-    return c
-
 def load_data(num):
     X = []
 
@@ -59,7 +55,7 @@ def load_data(num):
             cropped_win = cv2.resize(cropped_win, (224, 224))
             cropped_win = np.array([cropped_win])
             mask = fgmask[y:y + WIN_SIZE, x:x + WIN_SIZE]
-            if 0.5 < np.mean(cropped_win):
+            if 0.9 < np.mean(cropped_win):
                 X.append(cropped_win)
     return np.array(X, dtype=np.float32)
 
@@ -68,11 +64,6 @@ def join_nums(*args):
     for x in args:
         s = s + ' ' + str(x)
     return s + '\n'
-
-def get_cost(score):
-    if score < 0.5:
-        return 0
-    return 1 - score
 
 def main():
     det_model_path = os.path.join('/kw_resources', 'Master', 'Model', 'DetectionModel')
