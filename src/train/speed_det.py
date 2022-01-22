@@ -87,7 +87,6 @@ def main():
                 dst = det_model.predict(X[j])
                 end = time.time()
                 detection_count += 1
-                print(i, j)
                 t += end - start
 
     print('run time:', t, '[sec]')
