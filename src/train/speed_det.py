@@ -58,7 +58,7 @@ def load_data(num):
             mask = np.array(fgmask[y:y + WIN_SIZE, x:x + WIN_SIZE], np.float32)/255
             if 0.3 < np.mean(mask):
                 X.append(cropped_win)
-    return np.array(X, dtype=np.float32)
+    return np.array(X, dtype=np.float32), 0 == len(targets)
 
 def join_nums(*args):
     s = ''
@@ -70,33 +70,29 @@ def main():
     det_model_path = os.path.join('/kw_resources', 'Master', 'Model', 'DetectionModel')
     det_model = load_model(det_model_path)
 
-    M = 3000
-    N = 100
-    L = 4500
-    TAGS = 5
-
     detection_count = 0
 
-
     n = 0
-    t = 0
 
+    through = []
+
+    start = time.time()
     for i in range(1800):
-        X = load_data(i)
+        X, isempty = load_data(i)
         length = len(X)
-        if length == 0:
-            continue
         detection_count += length
         n += 1
-        start = time.time()
         for j in range(length):
             dst = det_model.predict(X[j])
-        end = time.time()
-        t += end - start
+        if (not isempty) and length == 0:
+            through.append(i)
+    end = time.time()
+    t = end - start
 
     print('run time:', t, '[sec]')
     print('run detection:', detection_count)
     print('frame num:', n)
+    print('through:', through)
     return
 
 if __name__ == '__main__':
