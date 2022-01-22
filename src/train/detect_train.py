@@ -39,7 +39,7 @@ def crop(image, center, position, window_size):
 
 def key(center):
     _, _, c = center
-    return c
+    return 1 - c
 
 def load_data(num):
     X = []
@@ -123,13 +123,13 @@ def main():
     with open(log_file_path, mode='w') as f:
         message = 'Epoch Train_Loss Valid_Loss\n'
         f.write(message)
-    #model, _ = detect_model()
-    load_model_path = os.path.join('/kw_resources', 'Master', 'Model', '2022-01-20-00:21:15')
-    model = load_model(load_model_path)
+    model, _ = detect_model()
+    #load_model_path = os.path.join('/kw_resources', 'Master', 'Model', '2022-01-20-00:21:15')
+    #model = load_model(load_model_path)
 
-    M = 3000
+    M = 3600
     N = 100
-    L = 5820
+    L = 4500
 
     for epoch in range(61, N):
         train_count = 1e-9
@@ -140,7 +140,7 @@ def main():
             BATCH_SIZE = 4
             for batch in range(0, length, BATCH_SIZE):
                 end = min(batch + BATCH_SIZE, length)
-                loss = model.train_on_batch(x=X[batch:batch+BATCH_SIZE], y={'output':Y[batch:batch+BATCH_SIZE]})
+                loss = model.train_on_batch(x=X[batch:batch+BATCH_SIZE], y=Y[batch:batch+BATCH_SIZE])
                 train_loss += loss*length
                 train_count += length
 
@@ -166,25 +166,5 @@ def main():
     save_model(model, model_file_path)
     return model
 
-def sample(model):
-    num = 190
-    X, Y = load_data(num)
-    N = len(X)
-    n = 0
-    for i in range(N):
-        inp = np.array([X[i]])
-        predict = model.predict(inp)[0]
-        x = X[i]
-        y = Y[i]
-        results = predict
-        for j in range(5):
-            xc, yc, c = results[j]
-            if .5 < c:
-                img = cv2.circle(x, (xc, yc), 3, (0, 255, 0))
-                path = os.path.join('/', 'kw_resources', 'Master', 'Sample', str(n) + '.png')
-                cv2.imwrite(path, img)
-    return
-
 if __name__ == '__main__':
     model = main()
-    #sample(model)
