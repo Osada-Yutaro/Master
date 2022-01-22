@@ -131,7 +131,7 @@ def main():
     N = 100
     L = 4500
 
-    for epoch in range(61, N):
+    for epoch in range(0, 50):
         train_count = 1e-9
         train_loss = 0
         for i in range(M):
