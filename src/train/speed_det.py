@@ -77,15 +77,16 @@ def main():
     through = []
 
     start = time.time()
-    for i in range(1800):
-        X, isempty = load_data(i)
-        length = len(X)
-        detection_count += length
-        n += 1
-        for j in range(length):
-            dst = det_model.predict(X[j])
-        if (not isempty) and length == 0:
-            through.append(i)
+    for _ in range(10):
+        for i in range(1800):
+            X, isempty = load_data(i)
+            length = len(X)
+            detection_count += length
+            n += 1
+            for j in range(length):
+                dst = det_model.predict(X[j])
+            if (not isempty) and length == 0:
+                through.append(i)
     end = time.time()
     t = end - start
 
