@@ -176,6 +176,8 @@ def get_cost(score):
 def main():
     det_model_path = os.path.join('/kw_resources', 'Master', 'Model', 'DetectionModel')
     reID_model_path = os.path.join('/kw_resources', 'Master', 'Model', 're_IDModel')
+    det_model = load_model(det_model_path)
+    re_model = load_model(reID_model_path)
 
     M = 3000
     N = 100
