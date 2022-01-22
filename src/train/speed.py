@@ -10,8 +10,8 @@ from tensorflow.python import training
 from preprocess import load_images, load_targets, image_in_frame, point_in_window
 from tensorflow.keras import backend as K
 import cv2
-from hungarian import Hungarian
 import time
+from tensorflow.keras.models import load_model, save_model
 from munkres import Munkres
 
 kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(5,5))
@@ -174,8 +174,10 @@ def get_cost(score):
     return 1 - score
 
 def main():
-    det_model = detect_model()
-    re_model = reID_model()
+    det_model_path = os.path.join('/kw_resources', 'Master', 'Model', 'DetectionModel')
+    reID_model_path = os.path.join('/kw_resources', 'Master', 'Model', 're_IDModel')
+    det_model = load_model(det_model_path)
+    re_model = reID_model(reID_model_path)
 
     M = 3000
     N = 100
@@ -194,7 +196,7 @@ def main():
         detection_count += length
         BATCH_SIZE = 1
 
-        score = np.array([[0 for _ in range(40)] for _ in range(TAGS)], dtype=np.float32)
+        cost = np.array([[0 for _ in range(40)] for _ in range(TAGS)], dtype=np.float32)
         detected_points = []
 
         id = 0
@@ -229,6 +231,10 @@ def main():
 
                 f1, f2, f3 = get_feature((xc, yc), l1, l2, l3)
 
+                f1 = np.array([f1])
+                f2 = np.array([f2])
+                f3 = np.array([f3])
+
                 features[id] = (f1, f2, f3)
 
                 for j in range(TAGS):
@@ -237,16 +243,16 @@ def main():
                         x1, x2, x3 = x
                         re_id = re_model.predict(x=[f1, f2, f3, x1, x2, x3])
                         reid_count += 1
-                        score[j][id] = get_cost(re_id)
+                        cost[j][id] = get_cost(re_id)
                     else:
-                        score[j][id] = 0.5
+                        cost[j][id] = 0.5
                 id += 1
         hung = Munkres()
-        optimal = hung.compute(score)
+        optimal = hung.compute(cost)
         answers = []
         for opt in optimal:
             tag, id = opt
-            if score[tag][id] < 0.8:
+            if cost[tag][id] <= 0.5:
                 answers.append(opt)
         for answer in answers:
             tag, id = answer
