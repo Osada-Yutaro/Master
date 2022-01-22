@@ -92,6 +92,8 @@ def main():
     n = 0
 
     for i in range(4500, 5820):
+        if i%100 == 0:
+            print('now:', i)
         X = load_data(i)
         length = len(X)
         detection_count += length
