@@ -44,7 +44,7 @@ def load_data(num):
     image = load_images(num)
     targets = load_targets()[num]
 
-    fgmask = fgbg.apply(image)
+    fgmask = fgbg.apply(np.array(image*255, dtype=np.uint8))
     fgmask = cv2.morphologyEx(fgmask, cv2.MORPH_OPEN, kernel)
 
     HEIGHT, WIDTH, _ = image.shape
@@ -56,7 +56,7 @@ def load_data(num):
             cropped_win = cv2.resize(cropped_win, (224, 224))
             cropped_win = np.array([cropped_win])
             mask = np.array(fgmask[y:y + WIN_SIZE, x:x + WIN_SIZE], np.float32)/255
-            if 0.05 < np.mean(mask):
+            if 0.5 < np.mean(mask):
                 X.append(cropped_win)
     return np.array(X, dtype=np.float32), 0 == len(targets)
 
