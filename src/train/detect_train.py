@@ -138,9 +138,6 @@ def main():
         train_count = 1e-9
         train_loss = 0
         for i in range(M):
-            with open('/kw_resources/Master/Log/aiueo.txt', mode='w') as f:
-                message = 'Epoch is ' + str(i) + ', ' + 'i is ' + str(i) + '\n'
-                f.write(message)
             X, Y = load_data(i)
             length = len(X)
             if length == 0:
@@ -157,6 +154,8 @@ def main():
         for i in range(M, L):
             X, Y = load_data(i)
             length = len(X)
+            if length == 0:
+                continue
             loss = model.evaluate(x=X, y=Y, verbose=0)
             valid_loss += loss*length
             valid_count += length
