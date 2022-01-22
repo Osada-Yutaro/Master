@@ -53,6 +53,9 @@ def load_data(num):
 
     x0 = np.random.randint(0, WIN_SIZE)
     y0 = np.random.randint(0, WIN_SIZE)
+    if not targets:
+        return np.array(X, dtype=np.float32), np.array(Y, dtype=np.float32)
+
     for x in range(x0, WIDTH - WIN_SIZE, WIN_SIZE//3):
         for y in range(y0, HEIGHT - WIN_SIZE, WIN_SIZE//3):
             cropped_win = image[y:y + WIN_SIZE, x:x + WIN_SIZE]
