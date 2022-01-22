@@ -138,11 +138,6 @@ def main():
         train_count = 1e-9
         train_loss = 0
         for i in range(M):
-            with open('/kw_resources/Master/Log/aiueo.txt', mode='a') as f:
-                message = 'epoch is ' + str(epoch) + '\n'
-                message = message + 'i is ' + str(i) + '/' + str(M) + '\n'
-                f.write(message)
-
             X, Y = load_data(i)
             length = len(X)
             if length == 0:
