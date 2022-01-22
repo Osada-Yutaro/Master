@@ -159,7 +159,7 @@ def main():
         for i in range(M, L):
             X, Y = load_data(i)
             length = len(X)
-            loss = model.evaluate(x=X, y={'output':Y}, verbose=0)
+            loss = model.evaluate(x=X, y=Y[batch:batch+BATCH_SIZE], verbose=0)
             valid_loss += loss*length
             valid_count += length
 
