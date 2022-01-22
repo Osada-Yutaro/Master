@@ -206,13 +206,6 @@ def main():
                 for k in range(TAGS):
                     target = np.array([1. if k == j else 0.], dtype=np.float32)
 
-                    print(x1.shape)
-                    print(x2.shape)
-                    print(x3.shape)
-                    print(f1.shape)
-                    print(f2.shape)
-                    print(f3.shape)
-                    
                     valid_loss += re_model.evaluate(x=[x1, x2, x3, f1, f2, f3], y=target)
                     valid_count += 1.
         
