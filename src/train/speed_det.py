@@ -86,9 +86,9 @@ def main():
     detection_count = 0
     reid_count = 0
 
-    start = time.time()
 
     n = 0
+    t = 0
 
     for i in range(4500, 5820):
         if i%100 == 0:
@@ -99,11 +99,13 @@ def main():
             continue
         detection_count += length
         n += 1
+        start = time.time()
         for j in range(length):
             dst = det_model.predict(X[j])
-    end = time.time()
+        end = time.time()
+        t += end - start
 
-    print('run time:', end - start, '[sec]')
+    print('run time:', t, '[sec]')
     print('run detection:', detection_count)
     print('frame num:', n)
     print('run re_ID:', reid_count)
