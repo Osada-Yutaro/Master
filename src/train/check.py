@@ -137,8 +137,8 @@ def main():
             TP += P - FP
             FN += state_rev.count(-1)
         
-        print('preicision:', TP/(TP + FP))
-        print('recall:', TP/(TP + FN))
+        print('preicision:', TP/(TP + FP + 1e-9))
+        print('recall:', TP/(TP + FN + 1e-9))
 
 
 
