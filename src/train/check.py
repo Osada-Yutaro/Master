@@ -16,28 +16,6 @@ from tensorflow.keras.models import load_model, save_model
 kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(5,5))
 fgbg = cv2.createBackgroundSubtractorMOG2(detectShadows=False)
 
-"""
-    modelの名前が一致する層を返す
-"""
-def get_layer(model, name):
-    for layer in model.layers:
-        if layer.name == name:
-            return layer
-    return None
-
-def crop(image, center, position, window_size):
-    x, y = position
-    new_center = point_in_window((window_size, window_size), position, center)
-    dst = image[y:y + window_size, x:x + window_size]
-    X = image_in_frame((window_size, window_size), dst)
-    Y = None
-    if new_center is None:
-        Y = [0., 0., 0.]
-    else:
-        xc, yc = new_center
-        Y = [xc, yc, 1.]
-    return X, Y
-
 def load_data(num):
     X = []
     Y = []
@@ -55,7 +33,6 @@ def load_data(num):
     for item in targets.items():
         id, center = item
         Y.append(center)
-        return
 
 
     for x in range(0, WIDTH - WIN_SIZE, WIN_SIZE//3):
@@ -69,12 +46,6 @@ def load_data(num):
                 offsets.append((x, y))
 
     return np.array(X, dtype=np.float32), Y, offsets
-
-def join_nums(*args):
-    s = ''
-    for x in args:
-        s = s + ' ' + str(x)
-    return s + '\n'
 
 def distance(p1, p2):
     from math import sqrt
@@ -139,11 +110,6 @@ def main():
         
         print('preicision:', TP/(TP + FP + 1e-9))
         print('recall:', TP/(TP + FN + 1e-9))
-
-
-
-
-        
 
     return
 
