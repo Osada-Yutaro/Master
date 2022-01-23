@@ -68,7 +68,7 @@ def load_data(num):
                 X.append(cropped_win)
                 offsets.append((x, y))
 
-    return np.array(X, dtype=np.float32), offsets
+    return np.array(X, dtype=np.float32), Y, offsets
 
 def join_nums(*args):
     s = ''
