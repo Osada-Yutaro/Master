@@ -91,7 +91,7 @@ def main():
                 if i in state:
                     continue
                 for j in range(P):
-                    if j in state_rev[i]:
+                    if j in state_rev:
                         continue
                     if state[j] == -1:
                         dis = distance(estimated_point[j], Y[i])
