@@ -103,9 +103,8 @@ def evaluate(det_model, item, N, M):
             TP += P - FP
             FN += state_rev.count(-1)
         
-        print(item)
-        print('preicision:', TP/(TP + FP + 1e-9))
-        print('recall:', TP/(TP + FN + 1e-9))
+    print(item)
+    print('TP, TN, FP, FN = ', TP, TN, FP, FN)
 
 def main():
     det_model_path = os.path.join('/kw_resources', 'Master', 'Model', 'DetectionModel')

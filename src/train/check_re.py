@@ -169,9 +169,7 @@ def evaluate(re_model, det_model, item, N, M):
                 if target == 1 and estimated == 0:
                     FN += 1
     print(item)
-    print('accuracy:', (TP + TN)/(TP + FN + FP + FN + 1e-9))
-    print('preicision:', TP/(TP + FP + 1e-9))
-    print('recall:', TP/(TP + FN + 1e-9))
+    print('TP, TN, FP, FN = ', TP, TN, FP, FN)
 
 
 
