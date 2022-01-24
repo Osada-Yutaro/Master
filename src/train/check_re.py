@@ -126,26 +126,13 @@ def get_feature(center, layer_2, layer_5, layer_9):
     f3 = layer_9[top3:top3 + 1, left3:left3 + 1, :]
     return f1, f2, f3
 
-def main():
-    now = datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S')
-    log_file_name = now + '.txt'
-    log_file_path = os.path.join('/', 'kw_resources', 'Master', 'Log', 'RE_ID', log_file_name)
-    model_file_path = os.path.join('/', 'kw_resources', 'Master', 'Model', 'RE_ID', now)
-    with open(log_file_path, mode='w') as f:
-        message = 'Epoch Train_Loss Valid_Loss\n'
-        f.write(message)
-    re_model = reID_model()
-    _, det_model = detect_model()
-
-    M = 3600
-    N = 100
-    L = 4500
+def evaluate(re_model, det_model, item, N, M):
     TAGS = 5
     TP, TN, FP, FN = 0, 0, 0, 0
 
     history = [() for _ in range(TAGS)]
 
-    for i in range(4500, 5820):
+    for i in range(N, M):
         Xs, Ys = load_data(i)
         EMPTY = [[] for _ in range(5)]
         if EMPTY == Xs:
@@ -181,9 +168,20 @@ def main():
                     FP += 1
                 if target == 1 and estimated == 0:
                     FN += 1
+    print(item)
     print('accuracy:', (TP + TN)/(TP + FN + FP + FN + 1e-9))
     print('preicision:', TP/(TP + FP + 1e-9))
     print('recall:', TP/(TP + FN + 1e-9))
+
+
+
+def main():
+    model_file_path = os.path.join('/', 'kw_resources', 'Master', 'Model', 're_IDModel', now)
+    re_model = load_model(model_file_path)
+    _, det_model = detect_model()
+    evaluate(re_model=re_model, det_model=det_model, item='Train', N=0, M=3600)
+    evaluate(re_model=re_model, det_model=det_model, item='Valid', N=3600, M=4500)
+    evaluate(re_model=re_model, det_model=det_model, item='Test', N=4500, M=5820)
     return
 
 if __name__ == '__main__':
