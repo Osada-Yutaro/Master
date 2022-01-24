@@ -70,7 +70,7 @@ def evaluate(det_model, item, N, M):
                 estimated.append(estimated_point)
 
         T = len(Y)
-        P = len(X)
+        P = len(estimated)
         state = [-1 for _ in range(P)]
         state_rev = [-1 for _ in range(T)]
         pre_state = []
