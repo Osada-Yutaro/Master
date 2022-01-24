@@ -53,7 +53,7 @@ def distance(p1, p2):
     x2, y2 = p2
     return sqrt(pow(x1 - x2, 2) + pow(y1 - y2, 2))
 
-def main():
+def evaluate(det_model, item, N, M):
     det_model_path = os.path.join('/kw_resources', 'Master', 'Model', 'DetectionModel')
     det_model = load_model(det_model_path)
 
@@ -108,9 +108,17 @@ def main():
             TP += P - FP
             FN += state_rev.count(-1)
         
+        print(item)
         print('preicision:', TP/(TP + FP + 1e-9))
         print('recall:', TP/(TP + FN + 1e-9))
 
+def main():
+    det_model_path = os.path.join('/kw_resources', 'Master', 'Model', 'DetectionModel')
+    det_model = load_model(det_model_path)
+
+    evaluate(det_model, 'Train', 0, 3600)
+    evaluate(det_model, 'Valid', 3600, 4500)
+    evaluate(det_model, 'Test', 4500, 5820)
     return
 
 if __name__ == '__main__':
