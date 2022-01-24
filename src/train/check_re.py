@@ -176,7 +176,7 @@ def evaluate(re_model, det_model, item, N, M):
 
 
 def main():
-    model_file_path = os.path.join('/', 'kw_resources', 'Master', 'Model', 're_IDModel', now)
+    model_file_path = os.path.join('/', 'kw_resources', 'Master', 'Model', 're_IDModel')
     re_model = load_model(model_file_path)
     _, det_model = detect_model()
     evaluate(re_model=re_model, det_model=det_model, item='Train', N=0, M=3600)

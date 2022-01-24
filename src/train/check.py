@@ -54,11 +54,6 @@ def distance(p1, p2):
     return sqrt(pow(x1 - x2, 2) + pow(y1 - y2, 2))
 
 def evaluate(det_model, item, N, M):
-    det_model_path = os.path.join('/kw_resources', 'Master', 'Model', 'DetectionModel')
-    det_model = load_model(det_model_path)
-
-    detection_count = 0
-
     TP, TN, FP, FN = 0, 0, 0, 0
 
     for i in range(4500, 5820):
