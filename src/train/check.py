@@ -73,7 +73,7 @@ def main():
                 estimated_y = 192*y + offsets[j][1]
                 estimated_point = (estimated_x, estimated_y)
                 estimated.append(estimated_point)
-        
+
         T = len(Y)
         P = len(X)
         state = [-1 for _ in range(P)]
@@ -114,4 +114,4 @@ def main():
     return
 
 if __name__ == '__main__':
-    model = main()
+    main()

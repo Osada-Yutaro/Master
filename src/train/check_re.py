@@ -182,6 +182,8 @@ def main():
                 if target == 1 and estimated == 0:
                     FN += 1
     print('accuracy:', (TP + TN)/(TP + FN + FP + FN + 1e-9))
+    print('preicision:', TP/(TP + FP + 1e-9))
+    print('recall:', TP/(TP + FN + 1e-9))
     return
 
 if __name__ == '__main__':
