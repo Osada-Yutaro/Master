@@ -94,7 +94,7 @@ def main():
                     if j in state_rev:
                         continue
                     if state[j] == -1:
-                        dis = distance(estimated_point[j], Y[i])
+                        dis = distance(estimated[j], Y[i])
 
                         if dis < min_dis:
                             min_dis = dis
