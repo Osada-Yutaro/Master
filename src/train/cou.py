@@ -1,18 +1,6 @@
-import os
-import datetime
-from tensorflow.keras.models import load_model
-from tensorflow.keras.losses import mean_squared_error
-from tensorflow.keras import applications
-from tensorflow.keras.models import Model
-from tensorflow.keras.layers import Dense, Input, Flatten, BatchNormalization, Conv2D, MaxPooling2D, Concatenate
 import numpy as np
-from tensorflow.python import training
 from preprocess import load_images, load_targets, image_in_frame, point_in_window
-from tensorflow.keras import backend as K
 import cv2
-import time
-from tensorflow.keras.models import load_model, save_model
-from munkres import Munkres
 
 kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(5,5))
 fgbg = cv2.createBackgroundSubtractorMOG2(detectShadows=False)
